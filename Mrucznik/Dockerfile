@@ -44,11 +44,11 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
     unzip \
     libicu66:i386
 
-# Get SAMP server TODO: https://sa-mp.co.id/files/samp03DLsvr_R1.tar.gz
+# Get SAMP server
 RUN mkdir /home/samp && \
-    wget http://files.sa-mp.com/samp037svr_R2-1.tar.gz && \
-    tar -xzf samp037svr_R2-1.tar.gz -C /home/samp --strip-components=1 && \ 
-    rm samp037svr_R2-1.tar.gz
+    wget https://sa-mp.co.id/files/samp03DLsvr_R1.tar.gz && \
+    tar -xzf samp03DLsvr_R1.tar.gz -C /home/samp --strip-components=1 && \ 
+    rm samp03DLsvr_R1.tar.gz
     
 # Get SAMP Sharp resources
 RUN wget https://github.com/ikkentim/SampSharp/releases/download/0.9.3/SampSharp-0.9.3.zip && \
