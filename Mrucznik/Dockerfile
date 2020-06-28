@@ -23,13 +23,22 @@
 #
 
 
-
 #
 # Build gamemode stage
 #
-#FROM ubuntu AS build-gamemode
-#
-#WORKDIR /build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-gamemode
+
+WORKDIR /build
+
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet nuget add source http://nuget.timpotze.nl/api/v2/
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
 
 
 #
@@ -71,8 +80,8 @@ RUN sed -i 's/changeme/funiol/' /home/samp/server.cfg && \
     echo "gamemode gamemode/Mrucznik.dll" >> /home/samp/server.cfg
 
 #COPY --from=build-sampsharp /build/SampSharp/bin/* /home/samp/plugins/
-#COPY --from=build-gamemode /build /home/samp/gamemode
-COPY ./bin/Release/netcoreapp3.1/* /home/samp/gamemode/
+COPY --from=build-gamemode /build/out /home/samp/gamemode
+#COPY ./bin/Release/netcoreapp3.1/* /home/samp/gamemode/ # local build
 
 EXPOSE 7777    
 
