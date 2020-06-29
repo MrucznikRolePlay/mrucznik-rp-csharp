@@ -43,7 +43,7 @@ namespace Mrucznik
 
         public static bool Connect()
         {
-            var host = "127.0.0.1:3001";//TODO: Get hostname, port and credentials from config file
+            var host = "51.178.19.80:3001"; //TODO: Get hostname, port and credentials from config file
             _channel = new Channel(host, ChannelCredentials.Insecure);
             try
             {
