@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mrucznik", "Mrucznik\Mrucznik.csproj", "{86230376-DEDA-4D9C-8682-CA5E3010BF1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MrucznikTests", "MrucznikTests\MrucznikTests.csproj", "{9A9B9FE9-86CD-4483-AE18-13830A7CB9E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{86230376-DEDA-4D9C-8682-CA5E3010BF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86230376-DEDA-4D9C-8682-CA5E3010BF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86230376-DEDA-4D9C-8682-CA5E3010BF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A9B9FE9-86CD-4483-AE18-13830A7CB9E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9B9FE9-86CD-4483-AE18-13830A7CB9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9B9FE9-86CD-4483-AE18-13830A7CB9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9B9FE9-86CD-4483-AE18-13830A7CB9E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
