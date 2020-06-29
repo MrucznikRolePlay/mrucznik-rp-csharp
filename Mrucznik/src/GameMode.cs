@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Text.RegularExpressions;
+using Grpc.Core;
 using Mrucznik.Controllers;
+using Mruv.Server;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Controllers;
 using SampSharp.GameMode.Definitions;
-using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.World;
-using Timer = System.Timers.Timer;
+using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik
 {
@@ -43,17 +42,56 @@ namespace Mrucznik
             ManualVehicleEngineAndLights();
             ShowNameTags(true);
             SetNameTagDrawDistance(70.0f);
-
             Server.SetWeather(2);
 
+            // Connect to MruV API
+            Console.WriteLine("Connecting to MruV API...");
+            try
+            {
+                MruV.Connect();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err);
+                Exit();
+                return;
+            }
+
+            Console.WriteLine("Connected, registering server in API.");
+            try
+            {
+                var serverId = MruV.Server.RegisterServer(new ServerInfo()
+                {
+                    Host = "127.0.0.1",
+                    Port = "7777",
+                    Name = "!PL! Mrucznik Role Play 3.0. !PL!",
+                    Platform = "SA-MP",
+                    Players = 0
+                });
+                Console.WriteLine($"Registered server in MruV API, server id: {serverId}");
+            }
+            catch (RpcException err)
+            {
+                Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
+            }
+            
             // Classes
-            for (int i = 0; i < 311; i++)
+            for (int i = 1; i < 311; i++)
                 AddPlayerClass(i, new Vector3(1759.0189f, -1898.1260f, 13.5622f), 266.4503f);
         }
 
         protected override void OnExited(EventArgs e)
         {
             base.OnExited(e);
+
+            try
+            {
+                MruV.Disconnect();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err);
+            }
 
             Console.WriteLine("----------------------------------");
             Console.WriteLine("---------- GAMEMODE OFF ----------");
