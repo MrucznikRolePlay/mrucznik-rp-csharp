@@ -4,6 +4,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Mrucznik-RP</RootNamespace>
         <OutputType>Exe</OutputType>
+        <AssemblyVersion>3.0.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>

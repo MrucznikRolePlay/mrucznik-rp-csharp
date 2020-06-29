@@ -73,6 +73,7 @@ RUN wget https://deploy.timpotze.nl/packages/dotnet20200127.zip && \
 
 # Change config
 RUN sed -i 's/changeme/funiol/' /home/samp/server.cfg && \ 
+    sed -i 's/SA-MP 0.3 Server/!PL! Mrucznik Role Play 3.0 !PL!/' /home/samp/server.cfg && \ 
     sed -i 's/gamemode0 grandlarc 1/gamemode0 empty 1/' /home/samp/server.cfg && \
     sed -i 's/filterscripts base gl_actions gl_property gl_realtime/filterscripts/' /home/samp/server.cfg && \
     echo "plugins libSampSharp.so" >> /home/samp/server.cfg && \
