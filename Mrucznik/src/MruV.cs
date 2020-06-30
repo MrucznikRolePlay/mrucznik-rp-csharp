@@ -18,6 +18,9 @@ using Mruv.Vehicles;
 
 namespace Mrucznik
 {
+    /// <summary>
+    /// MruV gRPC API.
+    /// </summary>
     public static class MruV
     {
         private static Channel _channel;

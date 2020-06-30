@@ -5,6 +5,8 @@ using Mruv.Server;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Controllers;
 using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.Events;
+using SampSharp.GameMode.World;
 using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik
@@ -18,7 +20,7 @@ namespace Mrucznik
             base.OnInitialized(e);
 
             var version = GetType().Assembly.GetName().Version?.ToString();
-
+            
             Console.WriteLine("\n----------------------------------");
             Console.WriteLine("M | --- Mrucznik Role Play --- | M");
             Console.WriteLine("R | ---        ****        --- | R");
@@ -103,6 +105,18 @@ namespace Mrucznik
             base.LoadControllers(controllers);
 
             controllers.Override(new PlayerController());
+        }
+
+        protected override void OnPlayerCommandText(BasePlayer player, CommandTextEventArgs e)
+        {
+            base.OnPlayerCommandText(player, e);
+            
+            if (e.Success == false)
+            {
+                player.SendClientMessage($"Nie znaleziono komendy: {e.Text}.");
+                e.Success = true;
+                return;
+            }
         }
 
         #endregion

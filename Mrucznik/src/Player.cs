@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Mruv;
+using Mruv.Economy;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
@@ -14,20 +15,17 @@ namespace Mrucznik
 {
     public class Player : BasePlayer
     {
-        private Timer _realWorldTimeTimer;
+        private RealTime _realTime;
 
         public Player()
         {
-            _realWorldTimeTimer = new Timer(1000);
-            _realWorldTimeTimer.Elapsed += (sender, args) => { SetTime(DateTime.Now.Hour, DateTime.Now.Minute); };
-            _realWorldTimeTimer.AutoReset = true;
+            _realTime = new RealTime(this);
         }
 
         public override void OnConnected(EventArgs e)
         {
             base.OnConnected(e);
 
-            _realWorldTimeTimer.Start();
             SendClientMessage(Color.White, "SERVER: Witaj {0}", Name);
 
             if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
@@ -58,77 +56,29 @@ namespace Mrucznik
                 SetCameraLookAt(new Vector3(-2819.05078f, 1141.4909f, 23.3147f));
                 ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
             });
+            
+            // Check bans
+            if (MruV.Punisments.IsPlayerBanned(new IsPlayerBannedRequest() {Ip = IP}).Banned) {
+                    
+            }
 
             // Login/Registration
             var check = MruV.Accounts.IsAccountExists(new IsAccountExistsRequest() {Login = Name});
-            var loginDialog = new InputDialog("Logowanie", $"Witaj {Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.", true, "Zaloguj się", "Wyjdź");
             if (check.Exists)
             {
-                loginDialog.Show(this);
-                loginDialog.Response += (sender, args) =>
-                {
-                    var req = new LogInRequest() {Login = Name, Password = args.InputText};
-                    try
-                    {
-                        LogInResponse response = MruV.Accounts.LogIn(req);
-                        if (response.Success)
-                        {
-                            SendClientMessage("Zalogowano!");
-                        }
-                        else
-                        {
-                            SendClientMessage("Złe hasło!");
-                            loginDialog.Show(this);
-                        }
-                    }
-                    catch (RpcException err)
-                    {
-                        SendClientMessage($"Nie udało się zalogować, błąd: {err.Status.Detail}");
-                    }
-                };
+                var loginFlow = new LoginFlow(this);
+                loginFlow.Start();
             }
             else
             {
-                var registerDialog = new InputDialog("Rejestracja konta", "Witaj. Aby zacząć grę na serwerze musisz się zarejestrować.\nAby to zrobić wpisz w okienko poniżej hasło które chcesz używać w swoim koncie.\nZapamiętaj je gdyż będziesz musiał go używać za każdym razem kiedy wejdziesz na serwer", true, "Zarejestruj się", "Wyjdź");
-                registerDialog.Show(this);
-                registerDialog.Response += (sender, args) =>
-                {
-                    var req = new RegisterAccountRequest();
-                    req.Account = new Account()
-                    {
-                        Email = "mrucznix@gmail.com",
-                        Login = Name,
-                        Nick = Name
-                    };
-                    req.Password = args.InputText;
-
-                    try
-                    {
-                        var response = MruV.Accounts.RegisterAccount(req);
-                        if (response.Success)
-                        {
-                            SendClientMessage("Zarejestrowano!");
-                            loginDialog.Show(this);
-                        }
-                        else
-                        {
-                            SendClientMessage("Nie udało się zarejestrować konta.");
-                            registerDialog.Show(this);
-                        }
-                    }
-                    catch(RpcException err)
-                    {
-                        SendClientMessage($"Nie udało się zarejestrować, błąd: {err.Status.Detail}");
-                    }
-                };
+                var registrationFlow = new RegistrationFlow(this);
+                registrationFlow.Start();
             }
         }
 
         public override void OnDisconnected(DisconnectEventArgs e)
         {
             base.OnDisconnected(e);
-
-            _realWorldTimeTimer.Stop();
         }
 
         public override void OnRequestClass(RequestClassEventArgs e)
