@@ -70,13 +70,23 @@ RUN wget https://deploy.timpotze.nl/packages/dotnet20200127.zip && \
     unzip dotnet20200127.zip && \
     cp -r dotnet20200127/runtime /home/samp/dotnet && \
     rm -r dotnet20200127 && rm dotnet20200127.zip
+	
+# Get crashdetect plugin
+RUN wget https://github.com/Zeex/samp-plugin-crashdetect/releases/download/v4.19.4/crashdetect-4.19.4-linux.tar.gz && \
+	tar -xzf crashdetect-4.19.4-linux.tar.gz -C /home/samp/plugins --wildcards --no-anchored '*.so' --strip-components=1 && \ 
+    rm crashdetect-4.19.4-linux.tar.gz
+	
+# Get streamer plugin
+RUN wget https://github.com/samp-incognito/samp-streamer-plugin/releases/download/v2.9.4/samp-streamer-plugin-2.9.4.zip && \
+	unzip -j samp-streamer-plugin-2.9.4.zip plugins/streamer.so -d /home/samp/plugins && \
+	rm samp-streamer-plugin-2.9.4.zip
 
 # Change config
 RUN sed -i 's/changeme/funiol/' /home/samp/server.cfg && \ 
     sed -i 's/SA-MP 0.3 Server/!PL! Mrucznik Role Play 3.0 !PL!/' /home/samp/server.cfg && \ 
     sed -i 's/gamemode0 grandlarc 1/gamemode0 empty 1/' /home/samp/server.cfg && \
     sed -i 's/filterscripts base gl_actions gl_property gl_realtime/filterscripts/' /home/samp/server.cfg && \
-    echo "plugins libSampSharp.so" >> /home/samp/server.cfg && \
+    echo "plugins crashdetect.so libSampSharp.so streamer.so" >> /home/samp/server.cfg && \
     echo "coreclr dotnet" >> /home/samp/server.cfg && \
     echo "gamemode gamemode/Mrucznik.dll" >> /home/samp/server.cfg
 
