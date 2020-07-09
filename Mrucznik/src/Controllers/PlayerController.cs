@@ -6,7 +6,7 @@ namespace Mrucznik.Controllers
     {
         public override void RegisterTypes()
         {
-            Player.Register<Player>();
+            Logowanie.Register<Logowanie>();
         }
     }
 }
