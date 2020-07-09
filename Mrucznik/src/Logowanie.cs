@@ -7,7 +7,6 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.World;
 using Timer = System.Timers.Timer;
 
 namespace Mrucznik
@@ -28,21 +27,19 @@ namespace Mrucznik
         {
 			SetSpawnInfo(0, 0, new Vector3(0, 0, 0), 0);
 			Spawn();
-			Position = new Vector3(1759.0189f, -1898.1260f, 13.5622f);
-			Health = 100;
-			Skin = 13;
-			SendClientMessage("Ustawiono poprawną pozycję.");
-			ToggleControllable(true);
-			ApplyAnimation("CARRY", "crry_prtial", 1, false, false, false, false, 0);
-			ClearAnimations();
+			SetSpawnPlayer();
+			PlaySound(0);
 		}
+
 
 		public override void OnConnected(EventArgs e)
 		{
 			base.OnConnected(e);
 			IsLoggedIn = false;
 			_realWorldTimeTimer.Start();
+			ClearPlayerChat();
 			SendClientMessage(Color.White, "SERWER: Witaj {0}!", Name);
+			SendClientMessage(Color.Yellow, "Aby kontynuować dalej musisz zweryfikować swoje konto.");
 
 			if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
 			{
@@ -52,7 +49,6 @@ namespace Mrucznik
 				return;
 			}
 
-			// Set time to real world time
 			ToggleClock(true);
 
 			Color = Color.LightGray;
@@ -89,16 +85,17 @@ namespace Mrucznik
 						{
 							IsLoggedIn = true;
 							LoginWarnings = 0;
-							SendClientMessage("Zostałeś poprawnie zalogowany do swojego konta.");
+							SendClientMessage(Color.Green, "Zostałeś poprawnie zalogowany do swojego konta.");
 							OnLoggedIn();
 						}
 						else
 						{
-							SendClientMessage("Złe hasło!");
+							SendClientMessage(Color.OrangeRed, "Błędne hasło!");
 							LoginWarnings++;
 							if (LoginWarnings == 3)
 							{
-								SendClientMessage("Wpisałeś 3 razy niepoprawne hasło!");
+								SendClientMessage(Color.Red, "Wpisałeś 3 razy niepoprawne hasło!");
+								SendClientMessage(Color.Red, "Zostałeś wykopany z serwera.");
 								Kick();
 								return;
 							}
@@ -131,12 +128,12 @@ namespace Mrucznik
 						var response = MruV.Accounts.RegisterAccount(req);
 						if (response.Success)
 						{
-							SendClientMessage("Zarejestrowano!");
+							SendClientMessage(Color.Green, "Pomyślnie zarejestrowano konto. Zaloguj się ponownie.");
 							loginDialog.Show(this);
 						}
 						else
 						{
-							SendClientMessage("Nie udało się zarejestrować konta.");
+							SendClientMessage(Color.Red, "Nie udało się zarejestrować konta.");
 							registerDialog.Show(this);
 						}
 					}
@@ -153,7 +150,7 @@ namespace Mrucznik
 			base.OnSpawned(e);
 			if (IsLoggedIn == false)
 			{
-				SendClientMessage("Wykryto nieautoryzowany spawn.");
+				SendClientMessage(Color.Red, "Wykryto nieautoryzowany spawn.");
 				VirtualWorld = Id + 300;
 				Kick();
 				return;
@@ -169,7 +166,7 @@ namespace Mrucznik
 		public override void OnRequestClass(RequestClassEventArgs e)
 		{
 			base.OnRequestClass(e);
-
+			Skin = 50;
 			ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
 		}
 	}
