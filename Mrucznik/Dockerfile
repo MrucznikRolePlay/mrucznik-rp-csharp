@@ -87,4 +87,4 @@ COPY --from=build-gamemode /build/out /home/samp/gamemode
 EXPOSE 7777    
 
 WORKDIR /home/samp
-ENTRYPOINT ./samp03svr
+ENTRYPOINT ["./samp03svr"]

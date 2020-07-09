@@ -14,7 +14,12 @@ namespace Mrucznik
         public LoginFlow(BasePlayer player)
         {
             _player = player;
-            _loginDialog = new InputDialog("Logowanie", $"Witaj {player.Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.", true, "Zaloguj się", "Wyjdź");
+            _loginDialog = new InputDialog(
+                "Logowanie",
+                $"Witaj {player.Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.",
+                true,
+                "Zaloguj się", "Wyjdź"
+            );
             _loginDialog.Response += LoginDialogOnResponse;
         }
 
@@ -27,6 +32,7 @@ namespace Mrucznik
                 if (response.Success)
                 {
                     _player.SendClientMessage("Zalogowano!");
+                    new CharacterSelectFlow(_player).Start();
                 }
                 else
                 {

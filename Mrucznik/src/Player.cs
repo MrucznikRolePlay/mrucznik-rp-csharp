@@ -1,15 +1,11 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Grpc.Core;
 using Mruv;
-using Mruv.Economy;
 using SampSharp.GameMode;
-using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
-using Timer = System.Timers.Timer;
 
 namespace Mrucznik
 {
@@ -56,11 +52,6 @@ namespace Mrucznik
                 SetCameraLookAt(new Vector3(-2819.05078f, 1141.4909f, 23.3147f));
                 ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
             });
-            
-            // Check bans
-            if (MruV.Punisments.IsPlayerBanned(new IsPlayerBannedRequest() {Ip = IP}).Banned) {
-                    
-            }
 
             // Login/Registration
             var check = MruV.Accounts.IsAccountExists(new IsAccountExistsRequest() {Login = Name});
