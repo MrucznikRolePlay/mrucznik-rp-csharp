@@ -12,16 +12,12 @@ namespace Mrucznik
             Health = 100;
             Skin = 13;
             Color = Color.White;
-            SendClientMessage("Ustawiono poprawn¹ pozycjê.");
+            SendClientMessage(Color.Gray, "Zosta³eœ przywrócony do miejsca spawnu.");
             ToggleControllable(true);
             ApplyAnimation("CARRY", "crry_prtial", 1, false, false, false, false, 0);
             ClearAnimations();
         }
 
-        public void ClearPlayerChat()
-        {
-            for(var i=0; i<=15; i++)
-                SendClientMessage("");
-        }
+        
     }
 }

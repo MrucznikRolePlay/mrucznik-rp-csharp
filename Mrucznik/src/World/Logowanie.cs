@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Mrucznik.Controllers;
 using Mruv;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
@@ -24,8 +25,8 @@ namespace Mrucznik
 		}
 
 		private void OnLoggedIn()
-        {
-			SetSpawnInfo(0, 0, new Vector3(0, 0, 0), 0);
+		{
+			SetSpawnInfo(0, 0, new Vector3(0.0, 0.0, 0.0), 0);
 			Spawn();
 			SetSpawnPlayer();
 			PlaySound(0);
@@ -37,10 +38,8 @@ namespace Mrucznik
 			base.OnConnected(e);
 			IsLoggedIn = false;
 			_realWorldTimeTimer.Start();
-			ClearPlayerChat();
-			SendClientMessage(Color.White, "SERWER: Witaj {0}!", Name);
-			SendClientMessage(Color.Yellow, "Aby kontynuować dalej musisz zweryfikować swoje konto.");
-
+			Chat chat = new Chat();
+			chat.ClearPlayerChat();
 			if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
 			{
 				SendClientMessage(
@@ -48,7 +47,8 @@ namespace Mrucznik
 				Kick();
 				return;
 			}
-
+			SendClientMessage(Color.White, "SERWER: Witaj {0} na serwerze Mrucznik Role Play!", Name);
+			SendClientMessage(Color.Yellow, "Aby kontynuować dalej musisz zweryfikować swoje konto.");
 			ToggleClock(true);
 
 			Color = Color.LightGray;
@@ -61,14 +61,13 @@ namespace Mrucznik
 			Task.Delay(1000).ContinueWith(t =>
 			{
 				if (!IsConnected) return;
-
 				Position = new Vector3(-2819.9297f, 1134.0607f, 26.0766f);
 				Angle = 326.0f;
 				CameraPosition = new Vector3(-2801.6691f, 1151.7545f, 31.5482f);
 				SetCameraLookAt(new Vector3(-2819.05078f, 1141.4909f, 23.3147f));
 				ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
 			});
-
+			Spawn();
 			// Login/Registration
 			var check = MruV.Accounts.IsAccountExists(new IsAccountExistsRequest() { Login = Name });
 			var loginDialog = new InputDialog("Logowanie", $"Witaj {Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.", true, "Zaloguj się", "Wyjdź");
@@ -85,12 +84,12 @@ namespace Mrucznik
 						{
 							IsLoggedIn = true;
 							LoginWarnings = 0;
-							SendClientMessage(Color.Green, "Zostałeś poprawnie zalogowany do swojego konta.");
+							SendClientMessage(Color.Yellow, "Witaj na serwerze Mrucznik Role Play {0}!", Name);
 							OnLoggedIn();
 						}
 						else
 						{
-							SendClientMessage(Color.OrangeRed, "Błędne hasło!");
+							SendClientMessage(Color.OrangeRed, "Hasło jest niepoprawne, spróbuj ponownie.");
 							LoginWarnings++;
 							if (LoginWarnings == 3)
 							{
@@ -161,13 +160,6 @@ namespace Mrucznik
 			base.OnDisconnected(e);
 			IsLoggedIn = false;
 			_realWorldTimeTimer.Stop();
-		}
-
-		public override void OnRequestClass(RequestClassEventArgs e)
-		{
-			base.OnRequestClass(e);
-			Skin = 50;
-			ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
 		}
 	}
 }

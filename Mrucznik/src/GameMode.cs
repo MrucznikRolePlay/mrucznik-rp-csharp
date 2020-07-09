@@ -45,6 +45,7 @@ namespace Mrucznik
 			SetNameTagDrawDistance(70.0f);
 			Server.SetWeather(2);
 
+
 			// Connect to MruV API
 			Console.WriteLine("Connecting to MruV API...");
 			try
