@@ -8,15 +8,15 @@ using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
-using Timer = System.Timers.Timer;
 
 namespace Mrucznik
 {
     public class Player : BasePlayer
     {
-        static public void Respawn()
+        public override void OnText(TextEventArgs e)
         {
-
+            base.OnText(e);
+            SendClientMessage("Wpisales {0}", e);
         }
     }
 }

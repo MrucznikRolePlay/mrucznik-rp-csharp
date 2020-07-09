@@ -4,9 +4,9 @@ namespace Mrucznik.Controllers
 {
     public class PlayerController : BasePlayerController
     {
-        public override void RegisterTypes()
+        public virtual void RegisterTypes()
         {
-            Logowanie.Register<Logowanie>();
+            Player.Register<Player>();
         }
     }
 }

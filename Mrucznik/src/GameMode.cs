@@ -9,6 +9,7 @@ using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik
 {
+
 	public class GameMode : BaseMode
 	{
 		#region Overrides of BaseMode
@@ -75,8 +76,6 @@ namespace Mrucznik
 				Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
 			}
 			
-			// Classes
-			AddPlayerClass(0, new Vector3(1759.0189f, -1898.1260f, 13.5622f), 266.4503f);
 		}
 
 		protected override void OnExited(EventArgs e)
@@ -101,7 +100,8 @@ namespace Mrucznik
 		{
 			base.LoadControllers(controllers);
 
-			controllers.Override(new PlayerController());
+			controllers.Add(new PlayerController());
+			controllers.Add(new LoginControllers());
 		}
 
 		#endregion

@@ -12,16 +12,27 @@ using Timer = System.Timers.Timer;
 
 namespace Mrucznik
 {
-	class Logowanie : BasePlayer
+	public class Logowanie : BasePlayer
 	{
 		private Timer _realWorldTimeTimer;
-		public bool IsLoggedIn { get; set; }
-		public int LoginWarnings { get; set; }
-		public void Logowanie()
+		public static bool IsLoggedIn { get; set; }
+		private int LoginWarnings { get; set; }
+		public Logowanie()
 		{
 			_realWorldTimeTimer = new Timer(1000);
 			_realWorldTimeTimer.Elapsed += (sender, args) => { SetTime(DateTime.Now.Hour, DateTime.Now.Minute); };
 			_realWorldTimeTimer.AutoReset = true;
+		}
+
+		private void OnLoggedIn()
+        {
+			SetSpawnInfo(0, 0, new Vector3(0, 0, 0), 0);
+			Spawn();
+			Position = new Vector3(1759.0189f, -1898.1260f, 13.5622f);
+			Health = 100;
+			Skin = 13;
+			SendClientMessage("Ustawiono poprawną pozycję.");
+			ToggleControllable(true);
 		}
 
 		public override void OnConnected(EventArgs e)
@@ -29,7 +40,7 @@ namespace Mrucznik
 			base.OnConnected(e);
 			IsLoggedIn = false;
 			_realWorldTimeTimer.Start();
-			SendClientMessage(Color.White, "SERVER: Witaj {0}", Name);
+			SendClientMessage(Color.White, "SERWER: Witaj {0}!", Name);
 
 			if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
 			{
@@ -43,7 +54,7 @@ namespace Mrucznik
 			ToggleClock(true);
 
 			Color = Color.LightGray;
-			VirtualWorld = Id;
+			VirtualWorld = Id+300;
 			ToggleControllable(false);
 
 			var sounds = new[] { 1187, 171, 176, 1076, 1187, 157, 162, 169, 178, 180, 181, 147, 140 };
@@ -77,8 +88,7 @@ namespace Mrucznik
 							IsLoggedIn = true;
 							LoginWarnings = 0;
 							SendClientMessage("Zostałeś poprawnie zalogowany do swojego konta.");
-                            Player.Respawn();
-
+							OnLoggedIn();
 						}
 						else
 						{
@@ -88,6 +98,7 @@ namespace Mrucznik
 							{
 								SendClientMessage("Wpisałeś 3 razy niepoprawne hasło!");
 								Kick();
+								return;
 							}
 							loginDialog.Show(this);
 						}
@@ -135,15 +146,18 @@ namespace Mrucznik
 			}
 		}
 
-        public override void OnSpawned(SpawnEventArgs e)
-        {
-            if(IsLoggedIn == false)
-            {
+		public override void OnSpawned(SpawnEventArgs e)
+		{
+			base.OnSpawned(e);
+			if (IsLoggedIn == false)
+			{
+				SendClientMessage("Wykryto nieautoryzowany spawn.");
+				VirtualWorld = Id + 300;
 				Kick();
-            }
-        }
-
-        public override void OnDisconnected(DisconnectEventArgs e)
+				return;
+			}
+		}
+		public override void OnDisconnected(DisconnectEventArgs e)
 		{
 			base.OnDisconnected(e);
 			IsLoggedIn = false;
