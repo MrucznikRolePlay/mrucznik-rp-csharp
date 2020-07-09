@@ -33,6 +33,8 @@ namespace Mrucznik
 			Skin = 13;
 			SendClientMessage("Ustawiono poprawną pozycję.");
 			ToggleControllable(true);
+			ApplyAnimation("CARRY", "crry_prtial", 1, false, false, false, false, 0);
+			ClearAnimations();
 		}
 
 		public override void OnConnected(EventArgs e)
