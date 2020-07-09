@@ -103,6 +103,7 @@ namespace Mrucznik
 
 			controllers.Override(new PlayerController());
 			controllers.Add(new LoginControllers());
+			controllers.Add(new ChatController());
 		}
 
 		#endregion

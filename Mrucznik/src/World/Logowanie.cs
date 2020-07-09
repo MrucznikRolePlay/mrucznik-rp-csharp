@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Mrucznik.Controllers;
 using Mruv;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
@@ -38,8 +37,7 @@ namespace Mrucznik
 			base.OnConnected(e);
 			IsLoggedIn = false;
 			_realWorldTimeTimer.Start();
-			Chat chat = new Chat();
-			chat.ClearPlayerChat();
+			Chat.ClearPlayerChat(this);
 			if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
 			{
 				SendClientMessage(

@@ -12,18 +12,12 @@ using Timer = System.Timers.Timer;
 
 namespace Mrucznik
 {
-	public class Chat : Player
+	public class Chat
 	{
-		public void ClearPlayerChat()
+		public static void ClearPlayerChat(Player player)
         {
 			for (var i = 0; i < 15; i++)
-				SendClientMessage(" ");
-        }
-		public void ClearAllPlayerChat()
-        {
-			for (var i = 0; i < 50; i++)
-				SendClientMessageToAll(" ");
-			SendClientMessageToAll(Color.Red, "Czat został wyczyszczony przez admina.");
+				player.SendClientMessage(" ");
         }
 	}
 }
