@@ -12,7 +12,7 @@ using Timer = System.Timers.Timer;
 
 namespace Mrucznik
 {
-	public class Logowanie : BasePlayer
+	public class Logowanie : Player
 	{
 		private Timer _realWorldTimeTimer;
 		public static bool IsLoggedIn { get; set; }

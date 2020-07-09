@@ -100,7 +100,7 @@ namespace Mrucznik
 		{
 			base.LoadControllers(controllers);
 
-			controllers.Add(new PlayerController());
+			controllers.Override(new PlayerController());
 			controllers.Add(new LoginControllers());
 		}
 
