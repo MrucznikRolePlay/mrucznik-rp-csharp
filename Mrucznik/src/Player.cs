@@ -76,10 +76,10 @@ namespace Mrucznik
         public override void Kick()
         {
             _KickTimer = new Timer(100, false);
-            _KickTimer.Tick += _KickTimer_Disposed;
+            _KickTimer.Tick += _KickTimer_Executed;
         }
 
-        private void _KickTimer_Disposed(object sender, EventArgs e)
+        private void _KickTimer_Executed(object sender, EventArgs e)
         {
             base.Kick();
         }
