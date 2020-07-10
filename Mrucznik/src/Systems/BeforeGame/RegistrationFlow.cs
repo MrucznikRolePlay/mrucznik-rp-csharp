@@ -8,10 +8,10 @@ namespace Mrucznik
 {
     public class RegistrationFlow
     {
-        private readonly BasePlayer _player;
+        private readonly Player _player;
         private readonly InputDialog _registerDialog;
 
-        public RegistrationFlow(BasePlayer player)
+        public RegistrationFlow(Player player)
         {
             _player = player;
             _registerDialog = new InputDialog("Rejestracja konta", "Witaj. Aby zacząć grę na serwerze musisz się zarejestrować.\nAby to zrobić wpisz w okienko poniżej hasło które chcesz używać w swoim koncie.\nZapamiętaj je gdyż będziesz musiał go używać za każdym razem kiedy wejdziesz na serwer", true, "Zarejestruj się", "Wyjdź");

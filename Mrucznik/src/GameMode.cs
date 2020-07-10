@@ -77,9 +77,6 @@ namespace Mrucznik
                 Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
             }
             
-            // Classes
-            for (int i = 1; i < 311; i++)
-                AddPlayerClass(i, new Vector3(1759.0189f, -1898.1260f, 13.5622f), 266.4503f);
         }
 
         protected override void OnExited(EventArgs e)

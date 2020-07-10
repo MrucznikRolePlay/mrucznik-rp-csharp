@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using mrucznik;
 using Mruv;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Events;
@@ -12,18 +13,22 @@ namespace Mrucznik
     public class Player : BasePlayer
     {
         private RealTime _realTime;
-
+        public AntiSpawn _antiSpawn;
+        private static Timer _KickTimer;
+        //zmienne
+        public bool LoggedIn;
         public Player()
         {
             _realTime = new RealTime(this);
+            _antiSpawn = new AntiSpawn(this);
+            
         }
-
         public override void OnConnected(EventArgs e)
         {
             base.OnConnected(e);
 
             SendClientMessage(Color.White, "SERVER: Witaj {0}", Name);
-
+            SendClientMessage(Color.Yellow, "Zweryfikuj swoje konto aby kontynuować.");
             if (!Regex.IsMatch(Name, "^[A-Z][a-z]+(_[A-Z][a-z]+([A-HJ-Z][a-z]+)?){1,2}$"))
             {
                 SendClientMessage(
@@ -35,9 +40,6 @@ namespace Mrucznik
             // Set time to real world time
             ToggleClock(true);
 
-            Color = Color.LightGray;
-            VirtualWorld = Id;
-            ToggleControllable(false);
 
             var sounds = new[] {1187, 171, 176, 1076, 1187, 157, 162, 169, 178, 180, 181, 147, 140};
             PlaySound(sounds[new Random().Next(sounds.Length)]);
@@ -50,7 +52,6 @@ namespace Mrucznik
                 Angle = 326.0f;
                 CameraPosition = new Vector3(-2801.6691f, 1151.7545f, 31.5482f);
                 SetCameraLookAt(new Vector3(-2819.05078f, 1141.4909f, 23.3147f));
-                ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
             });
 
             // Login/Registration
@@ -72,11 +73,15 @@ namespace Mrucznik
             base.OnDisconnected(e);
         }
 
-        public override void OnRequestClass(RequestClassEventArgs e)
+        public override void Kick()
         {
-            base.OnRequestClass(e);
+            _KickTimer = new Timer(100, false);
+            _KickTimer.Tick += _KickTimer_Disposed;
+        }
 
-            ApplyAnimation("ON_LOOKERS", "wave_loop", 3.5f, true, false, false, false, 0, false);
+        private void _KickTimer_Disposed(object sender, EventArgs e)
+        {
+            base.Kick();
         }
     }
 }

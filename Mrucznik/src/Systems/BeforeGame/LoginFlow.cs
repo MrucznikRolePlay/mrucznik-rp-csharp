@@ -1,17 +1,21 @@
+using System;
 using Grpc.Core;
+using mrucznik;
 using Mruv;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.World;
+using SampSharp.GameMode.SAMP;
 
 namespace Mrucznik
 {
     public class LoginFlow
     {
-        private readonly BasePlayer _player;
+        private readonly Player _player;
         private readonly InputDialog _loginDialog;
+        private int _playerBadPassword = 0;
 
-        public LoginFlow(BasePlayer player)
+        public LoginFlow(Player player)
         {
             _player = player;
             _loginDialog = new InputDialog(
@@ -20,6 +24,7 @@ namespace Mrucznik
                 true,
                 "Zaloguj się", "Wyjdź"
             );
+            _player.ToggleSpectating(true);
             _loginDialog.Response += LoginDialogOnResponse;
         }
 
@@ -32,11 +37,20 @@ namespace Mrucznik
                 if (response.Success)
                 {
                     _player.SendClientMessage("Zalogowano!");
-                    new CharacterSelectFlow(_player).Start();
+                    CharacterSelectFlow charsf = new CharacterSelectFlow(_player);
+                    charsf.ChoosedCharacter += _player._antiSpawn.OnPlayerChoosedCharacter;
+                    charsf.Start();
                 }
                 else
                 {
-                    _player.SendClientMessage("Złe hasło!");
+                    _playerBadPassword++;
+                    
+                    _player.SendClientMessage(Color.OrangeRed,"Złe hasło!");
+                    if (_playerBadPassword == 3)
+                    {
+                        _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za potrójne wpisanie złego hasła.");
+                        _player.Kick();
+                    }
                     _loginDialog.Show(_player);
                 }
             }
@@ -45,7 +59,7 @@ namespace Mrucznik
                 _player.SendClientMessage($"Nie udało się zalogować, błąd: {err.Status.Detail}");
             }
         }
-
+        
         public void Start()
         {
             _loginDialog.Show(_player);

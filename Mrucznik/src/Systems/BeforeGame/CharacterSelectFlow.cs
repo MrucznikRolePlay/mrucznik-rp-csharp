@@ -1,6 +1,9 @@
+using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
+using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
+using System;
 
 namespace Mrucznik
 {
@@ -8,7 +11,10 @@ namespace Mrucznik
     {
         private BasePlayer _player;
         private TablistDialog _dialog;
+        public event EventHandler ChoosedCharacter;
 
+
+        
         public CharacterSelectFlow(BasePlayer player)
         {
             _player = player;
@@ -22,7 +28,15 @@ namespace Mrucznik
 
         private void DialogOnResponse(object? sender, DialogResponseEventArgs e)
         {
-            
+            if (e.DialogButton == SampSharp.GameMode.Definitions.DialogButton.Right)
+            {
+                _player.SendClientMessage(Color.LightCoral, "Wyszedłeś z wyboru postaci. Zapraszamy ponownie!");
+                _player.Spawn();
+            }
+            else
+            {
+                ChoosedCharacter?.Invoke(_player, EventArgs.Empty);
+            }
         }
 
         public void Start()
