@@ -5,6 +5,7 @@ using SampSharp.GameMode.World;
 using SampSharp.GameMode.Events;
 using System.ComponentModel;
 using Mrucznik;
+using System;
 
 namespace mrucznik
 {
@@ -17,6 +18,8 @@ namespace mrucznik
             this._player = player;
             _player.Spawned += PlayerOnSpawned;
             _player.Connected += _player_Connected;
+            _player.CommandText += _player_CommandText;
+            _player.Text += _player_Text;
         }
 
         private void _player_Connected(object sender, System.EventArgs e)
@@ -34,6 +37,21 @@ namespace mrucznik
             {
                 _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za nielegalny spawn.");
                 _player.Kick();
+            }
+        }
+        private void _player_CommandText(object sendet, EventArgs e)
+        {
+            if (_player.LoggedIn == false)
+            {
+                return;
+            }
+        }
+
+        private void _player_Text(object sendet, EventArgs e)
+        {
+            if (_player.LoggedIn == false)
+            {
+                return;
             }
         }
         public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)

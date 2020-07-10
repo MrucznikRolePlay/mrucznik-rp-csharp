@@ -72,7 +72,6 @@ namespace Mrucznik
         {
             base.OnDisconnected(e);
         }
-
         public override void Kick()
         {
             _KickTimer = new Timer(100, false);
