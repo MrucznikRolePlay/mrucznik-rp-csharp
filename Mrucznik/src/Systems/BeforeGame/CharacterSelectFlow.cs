@@ -18,6 +18,7 @@ namespace Mrucznik
         public CharacterSelectFlow(BasePlayer player)
         {
             _player = player;
+            _player.SendClientMessage(Color.GreenYellow, "Wybierz swoją postać aby rozpocząć rozgrywkę.");
             _dialog = new TablistDialog("Wybór postaci", new []
             {
                 "Nick", "Level"
@@ -31,7 +32,7 @@ namespace Mrucznik
             if (e.DialogButton == SampSharp.GameMode.Definitions.DialogButton.Right)
             {
                 _player.SendClientMessage(Color.LightCoral, "Wyszedłeś z wyboru postaci. Zapraszamy ponownie!");
-                _player.Spawn();
+                _player.Kick();
             }
             else
             {

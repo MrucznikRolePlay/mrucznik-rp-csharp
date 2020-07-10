@@ -18,27 +18,26 @@ namespace Mrucznik
         public LoginFlow(Player player)
         {
             _player = player;
+            _player.SendClientMessage(Color.Yellow, "Zweryfikuj swoje konto aby kontynuować.");
             _loginDialog = new InputDialog(
                 "Logowanie",
-                $"Witaj {player.Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.",
+                $"Witaj {player.Nick}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.",
                 true,
                 "Zaloguj się", "Wyjdź"
             );
-            _player.ToggleSpectating(true);
             _loginDialog.Response += LoginDialogOnResponse;
         }
 
         private void LoginDialogOnResponse(object? sender, DialogResponseEventArgs e)
         {
-            var logInRequest = new LogInRequest() {Login = _player.Name, Password = e.InputText};
+            var logInRequest = new LogInRequest() {Login = _player.Nick, Password = e.InputText};
             try
             {
                 LogInResponse response = MruV.Accounts.LogIn(logInRequest);
                 if (response.Success)
                 {
-                    _player.SendClientMessage("Zalogowano!");
                     CharacterSelectFlow charsf = new CharacterSelectFlow(_player);
-                    charsf.ChoosedCharacter += _player._antiSpawn.OnPlayerChoosedCharacter;
+                    charsf.ChoosedCharacter += _player.OnPlayerChoosedCharacter;
                     charsf.Start();
                 }
                 else

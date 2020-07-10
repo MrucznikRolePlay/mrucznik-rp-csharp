@@ -11,7 +11,6 @@ namespace mrucznik
 {
     public class AntiSpawn 
     {
-        private bool CanSpawn;
         private Player _player;
         public AntiSpawn(Player player)
         {
@@ -53,19 +52,6 @@ namespace mrucznik
             {
                 return;
             }
-        }
-        public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
-        {
-            _player.LoggedIn = true;
-            _player.Spawn();
-            _player.Color = Color.White;
-            _player.VirtualWorld = 0;
-            _player.Position = new Vector3(1759.0189f, -1898.1260f, 13.5622f);
-            _player.Rotation = new Vector3(266.4503f);
-            _player.ToggleControllable(true);
-            _player.ToggleSpectating(false);
-            _player.ApplyAnimation("CARRY", "crry_prtial", 1.0f, false, false, false, false, 0);
-            _player.ClearAnimations();
         }
     }
 }
