@@ -23,6 +23,7 @@
 */
 //----------------------------------------------------*------------------------------------------------------//
 
+using Grpc.Core;
 using SampSharp.Core;
 
 namespace Mrucznik
@@ -33,6 +34,7 @@ namespace Mrucznik
         {
             new GameModeBuilder()
                 .Use<GameMode>()
+                .UseTcpClient("54.37.136.94", 8888)
                 .Run();
         }
     }
