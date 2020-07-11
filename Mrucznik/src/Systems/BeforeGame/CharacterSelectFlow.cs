@@ -11,9 +11,7 @@ namespace Mrucznik.Systems.BeforeGame
     {
         private Player _player;
         private TablistDialog _dialog;
-        public event EventHandler ChoosedCharacter;
-
-
+        private event EventHandler ChoosedCharacter;
         
         public CharacterSelectFlow(Player player)
         {
@@ -24,7 +22,8 @@ namespace Mrucznik.Systems.BeforeGame
                 "Nick", "Level"
             }, "Wybierz", "Wyjdź");
             _dialog.Response += DialogOnResponse;
-            
+            ChoosedCharacter += OnPlayerChoosedCharacter;
+
         }
 
         private void DialogOnResponse(object? sender, DialogResponseEventArgs e)
@@ -40,7 +39,7 @@ namespace Mrucznik.Systems.BeforeGame
             }
         }
 
-        public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
+        private void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
         {
             _player.LoggedIn = true;
             Tutorial tutorial = new Tutorial(_player);
