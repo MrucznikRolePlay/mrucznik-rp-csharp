@@ -5,7 +5,7 @@ using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
 
-namespace Mrucznik
+namespace Mrucznik.Systems.BeforeGame
 {
     public class RegistrationFlow
     {
@@ -37,8 +37,10 @@ namespace Mrucznik
                 var response = MruV.Accounts.RegisterAccount(registerAccountRequest);
                 if (response.Success)
                 {
-                    _player.SendClientMessage("Zarejestrowano!");
+                    
                     new LoginFlow(_player).Start();
+                    Tutorial tutorial = new Tutorial(_player);
+                    tutorial.RegisterMessage();
                 }
                 else
                 {

@@ -1,20 +1,15 @@
-﻿using SampSharp.GameMode;
-using SampSharp.GameMode.Controllers;
-using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.World;
+﻿using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.Events;
-using System.ComponentModel;
-using Mrucznik;
 using System;
 
-namespace mrucznik
+namespace Mrucznik.Systems.Anticheat
 {
     public class AntiSpawn 
     {
         private Player _player;
         public AntiSpawn(Player player)
         {
-            this._player = player;
+            _player = player;
             _player.Spawned += PlayerOnSpawned;
             _player.Connected += _player_Connected;
             _player.CommandText += _player_CommandText;
@@ -32,7 +27,7 @@ namespace mrucznik
         
         private void PlayerOnSpawned(object? sender, SpawnEventArgs e)
         {
-            if(_player.LoggedIn == false)
+            if(_player.LoggedIn == false || _player.InTutorial == true)
             {
                 _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za nielegalny spawn.");
                 _player.Kick();

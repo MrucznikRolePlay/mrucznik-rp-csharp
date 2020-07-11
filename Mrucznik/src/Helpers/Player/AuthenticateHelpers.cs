@@ -1,7 +1,7 @@
-﻿using Mrucznik;
+﻿using Mrucznik.Systems.BeforeGame;
 using Mruv;
 
-namespace mrucznik
+namespace Mrucznik.Helpers
 {
     public static class AuthenticateHelpers
     {

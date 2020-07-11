@@ -4,8 +4,8 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SampSharp.GameMode.SAMP;
-using static mrucznik.AuthenticateHelpers;
-namespace mrucznik
+using static Mrucznik.Helpers.AuthenticateHelpers;
+namespace Mrucznik.Helpers
 {
     public static class PlayerHelpers
     {

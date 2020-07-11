@@ -1,13 +1,12 @@
 using System;
 using Grpc.Core;
-using mrucznik;
 using Mruv;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.World;
 using SampSharp.GameMode.SAMP;
 
-namespace Mrucznik
+namespace Mrucznik.Systems.BeforeGame
 {
     public class LoginFlow
     {

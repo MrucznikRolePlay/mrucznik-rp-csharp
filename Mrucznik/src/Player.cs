@@ -1,10 +1,12 @@
 using System;
-using mrucznik;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
-using static mrucznik.PlayerHelpers;
+using static Mrucznik.Helpers.PlayerHelpers;
+using Mrucznik.Systems.Anticheat;
+using Mrucznik.Systems.BeforeGame;
+using SampSharp.GameMode.Definitions;
 
 namespace Mrucznik
 {
@@ -15,6 +17,7 @@ namespace Mrucznik
         public string Nick;
         //zmienne
         public bool LoggedIn;
+        public bool InTutorial;
         public Player()
         {
             _realTime = new RealTime(this);
@@ -28,17 +31,11 @@ namespace Mrucznik
         public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
         {
             LoggedIn = true;
+            Tutorial tutorial = new Tutorial(this);
+            tutorial.Start();
             Name = Nick;
             Nick = Name;
             Color = Color.White;
-            SetSpawnInfo(0, Skin, new Vector3(1759.0189f, -1898.1260f, 13.5622f), 266.4503f);
-            ToggleControllable(true);
-            ToggleSpectating(false);
-            Spawn();
-            VirtualWorld = 0;
-            
-            ApplyAnimation("CARRY", "crry_prtial", 1.0f, false, false, false, false, 0);
-            ClearAnimations();
             PlaySound(0);
         }
         public override void OnDisconnected(DisconnectEventArgs e)
@@ -52,9 +49,15 @@ namespace Mrucznik
             _KickTimer = new Timer(100, false);
             _KickTimer.Tick += _KickTimer_Executed;
         }
+        public override void SendPlayerMessageToAll(string message)
+        {
+            if (InTutorial == true) return;
+            base.SendPlayerMessageToAll(message);
+        }
         private void _KickTimer_Executed(object sender, EventArgs e)
         {
-            base.Kick();
+            if(IsConnected) base.Kick();
+            _KickTimer.Dispose();
         }
     }
 }

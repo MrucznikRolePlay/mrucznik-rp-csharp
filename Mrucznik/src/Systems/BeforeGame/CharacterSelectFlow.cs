@@ -5,7 +5,7 @@ using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
 using System;
 
-namespace Mrucznik
+namespace Mrucznik.Systems.BeforeGame
 {
     public class CharacterSelectFlow
     {
