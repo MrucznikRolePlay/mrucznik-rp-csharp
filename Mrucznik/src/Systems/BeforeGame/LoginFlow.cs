@@ -48,7 +48,7 @@ namespace Mrucznik.Systems.BeforeGame
                         _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za potrójne wpisanie złego hasła.");
                         _player.Kick();
                     }
-                    _loginDialog.Show(_player);
+                    else _loginDialog.Show(_player);
                 }
             }
             catch (RpcException err)

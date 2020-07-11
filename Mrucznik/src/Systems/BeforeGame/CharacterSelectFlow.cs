@@ -42,12 +42,13 @@ namespace Mrucznik.Systems.BeforeGame
         private void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
         {
             _player.LoggedIn = true;
-            Tutorial tutorial = new Tutorial(_player);
-            tutorial.Start();
             _player.Name = _player.Nick;
             _player.Nick = _player.Name;
             _player.Color = Color.White;
             _player.PlaySound(0);
+            _player.SetSpawnInfo(0, 0, new Vector3(180.0f, 150.0f, 8.0f), 90.0f);
+            _player.Spawn();
+            _player.Position = new Vector3(150.0f, 130.0f, 8.0f);
         }
         public void Start()
         {

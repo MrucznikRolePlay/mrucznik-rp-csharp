@@ -13,7 +13,8 @@ namespace Mrucznik
     public class Player : BasePlayer
     {
         private RealTime _realTime;
-        public AntiSpawn _antiSpawn;
+        public Antispawn _antispawn;
+        public Antiweapon _antiweapon;
         public string Nick;
         //zmienne
         public bool LoggedIn;
@@ -21,7 +22,8 @@ namespace Mrucznik
         public Player()
         {
             _realTime = new RealTime(this);
-            _antiSpawn = new AntiSpawn(this);  
+            _antispawn = new Antispawn(this);
+            _antiweapon = new Antiweapon(this);
         }
         public override void OnConnected(EventArgs e)
         {
@@ -37,7 +39,7 @@ namespace Mrucznik
         private static Timer _KickTimer;
         public override void Kick()
         {
-            _KickTimer = new Timer(100, false);
+            _KickTimer = new Timer(10, false);
             _KickTimer.Tick += _KickTimer_Executed;
         }
         public override void SendPlayerMessageToAll(string message)

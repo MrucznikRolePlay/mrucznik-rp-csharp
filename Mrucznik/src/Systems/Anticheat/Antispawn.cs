@@ -4,16 +4,14 @@ using System;
 
 namespace Mrucznik.Systems.Anticheat
 {
-    public class AntiSpawn 
+    public class Antispawn
     {
         private Player _player;
-        public AntiSpawn(Player player)
+        public Antispawn(Player player)
         {
             _player = player;
             _player.Spawned += PlayerOnSpawned;
             _player.Connected += _player_Connected;
-            _player.CommandText += _player_CommandText;
-            _player.Text += _player_Text;
         }
 
         private void _player_Connected(object sender, System.EventArgs e)
@@ -31,21 +29,6 @@ namespace Mrucznik.Systems.Anticheat
             {
                 _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za nielegalny spawn.");
                 _player.Kick();
-            }
-        }
-        private void _player_CommandText(object sendet, EventArgs e)
-        {
-            if (_player.LoggedIn == false)
-            {
-                return;
-            }
-        }
-
-        private void _player_Text(object sendet, EventArgs e)
-        {
-            if (_player.LoggedIn == false)
-            {
-                return;
             }
         }
     }
