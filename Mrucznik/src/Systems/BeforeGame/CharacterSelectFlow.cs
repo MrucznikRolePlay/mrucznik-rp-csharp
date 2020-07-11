@@ -9,13 +9,13 @@ namespace Mrucznik.Systems.BeforeGame
 {
     public class CharacterSelectFlow
     {
-        private BasePlayer _player;
+        private Player _player;
         private TablistDialog _dialog;
         public event EventHandler ChoosedCharacter;
 
 
         
-        public CharacterSelectFlow(BasePlayer player)
+        public CharacterSelectFlow(Player player)
         {
             _player = player;
             _player.SendClientMessage(Color.GreenYellow, "Wybierz swoją postać aby rozpocząć rozgrywkę.");
@@ -40,6 +40,16 @@ namespace Mrucznik.Systems.BeforeGame
             }
         }
 
+        public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
+        {
+            _player.LoggedIn = true;
+            Tutorial tutorial = new Tutorial(_player);
+            tutorial.Start();
+            _player.Name = _player.Nick;
+            _player.Nick = _player.Name;
+            _player.Color = Color.White;
+            _player.PlaySound(0);
+        }
         public void Start()
         {
             _dialog.Show(_player);

@@ -156,7 +156,6 @@ namespace Mrucznik.Systems.BeforeGame
 			}
 			else if(part == 124)
             {
-				SkinSelection skinsel = new SkinSelection(_player);
 				_player.InTutorial = false;
 			}
         }

@@ -36,7 +36,7 @@ namespace Mrucznik.Systems.BeforeGame
                 if (response.Success)
                 {
                     CharacterSelectFlow charsf = new CharacterSelectFlow(_player);
-                    charsf.ChoosedCharacter += _player.OnPlayerChoosedCharacter;
+                    charsf.ChoosedCharacter += charsf.OnPlayerChoosedCharacter;
                     charsf.Start();
                 }
                 else

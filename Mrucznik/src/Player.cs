@@ -28,16 +28,7 @@ namespace Mrucznik
             base.OnConnected(e);
             SetupClientOnConnect(this);
         }
-        public void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
-        {
-            LoggedIn = true;
-            Tutorial tutorial = new Tutorial(this);
-            tutorial.Start();
-            Name = Nick;
-            Nick = Name;
-            Color = Color.White;
-            PlaySound(0);
-        }
+        
         public override void OnDisconnected(DisconnectEventArgs e)
         {
             base.OnDisconnected(e);
