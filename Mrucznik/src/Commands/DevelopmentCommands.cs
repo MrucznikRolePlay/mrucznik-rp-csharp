@@ -1,15 +1,12 @@
 using Mrucznik.Systems;
-using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.SAMP.Commands;
-using SampSharp.GameMode.SAMP.Commands.PermissionCheckers;
 using SampSharp.GameMode.World;
 
 namespace Mrucznik.Commands
 {
     public class DevelopmentCommands
     {
-        
         [Command("testdialogflow")]
         private static void TestDialogFlow(BasePlayer sender)
         {
@@ -18,20 +15,21 @@ namespace Mrucznik.Commands
             first.Items.Add("Pierwsza opcja");
             first.Items.Add("Druga opcja");
             first.Items.Add("Trzecia opcja");
-            var dialog = new DialogFlow(false)
+            IDialog dialog = new DialogFlow(false)
                 .AddDialog(first)
                 .AddDialog(new InputDialog("Dialog 2", "Drugi dialog", false, "Dalej", "Cofnij"))
                 .AddDialog(new MessageDialog("Dialog 3", "Ostatni dialog", "Gotowe", "Cofnij"))
                 .End((o, args) =>
-            {
-                foreach (var arg in args)
                 {
-                    sender.SendClientMessage($"Output {arg.Key}: input: {arg.Value.InputText} | listitem: {arg.Value.ListItem}");
-                }
-            });
+                    foreach (var arg in args)
+                    {
+                        sender.SendClientMessage(
+                            $"Output {arg.Key}: input: {arg.Value.InputText} | listitem: {arg.Value.ListItem}");
+                    }
+                });
             dialog.Show(sender);
         }
-        
+
         [Command("testdialogflow2")]
         private static void TestDialogFlow2(BasePlayer sender)
         {
@@ -64,7 +62,8 @@ namespace Mrucznik.Commands
                 {
                     foreach (var arg in args)
                     {
-                        sender.SendClientMessage($"Output {arg.Key}: input: {arg.Value.InputText} | listitem: {arg.Value.ListItem}");
+                        sender.SendClientMessage(
+                            $"Output {arg.Key}: input: {arg.Value.InputText} | listitem: {arg.Value.ListItem}");
                     }
                 });
             dialog.Show(sender);
