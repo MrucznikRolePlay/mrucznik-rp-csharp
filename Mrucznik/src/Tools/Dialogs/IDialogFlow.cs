@@ -8,6 +8,6 @@ namespace Mrucznik.Systems
         void Next();
         void Previous();
 
-        void AddDialog(Dialog dialog);
+        void AddDialog();
     }
 }
