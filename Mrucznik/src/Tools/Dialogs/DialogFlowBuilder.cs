@@ -2,26 +2,30 @@ using SampSharp.GameMode.Display;
 
 namespace Mrucznik.Systems
 {
-    public class FlowComponent
-    {
-        public FlowComponent next;
-        public FlowComponent previous;
-    }
-    
     public abstract class DialogFlowBuilder
     {
-        private FlowComponent _component;
+        Dialog 
         
         protected DialogFlowBuilder()
         {
-            _component.previous = _component;
         }
 
-        public DialogFlowBuilder Next(DialogBuilder builder)
+        public DialogFlowBuilder Add(Dialog builder)
         {
-            _component.next = new FlowComponent();
-            _component.next.previous = _component;
-            _component = _component.next;
+            dialog.Response += (sender, args) =>
+            {
+                if (args.DialogButton == DialogButton.Left)
+                {
+                    LeftButtonAction(sender, args);
+                }
+            };
+            dialog.Response += (sender, args) =>
+            {
+                if (args.DialogButton == DialogButton.Right)
+                {
+                    RightButtonAction(sender, args);
+                }
+            };
             return this;
         }
     }
