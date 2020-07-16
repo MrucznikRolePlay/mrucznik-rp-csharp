@@ -30,7 +30,6 @@ namespace Mrucznik.Helpers
                 _player.SendClientMessage(Color.Red, "SERWER: Twój nick jest niepoprawny! Nick musi posiadać formę: Imię_Nazwisko!");
                 _player.Kick();
             }
-            _player.Nick = _player.Name;
             _player.ToggleClock(true);
             var sounds = new[] { 1187, 171, 176, 1076, 1187, 157, 162, 169, 178, 180, 181, 147, 140 };
             _player.PlaySound(sounds[new Random().Next(sounds.Length)]);

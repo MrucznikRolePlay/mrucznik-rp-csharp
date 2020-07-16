@@ -12,16 +12,16 @@ namespace Mrucznik
 {
     public class Player : BasePlayer
     {
-        private RealTime _realTime;
-        public Antispawn _antispawn;
-        public Antiweapon _antiweapon;
-        public string Nick;
-        //zmienne
         public bool LoggedIn;
         public bool InTutorial;
         
+        private RealTime _realTime;
+        private Antispawn _antispawn;
+        private Antiweapon _antiweapon;
+        
         public Player()
         {
+            // Init player components
             _realTime = new RealTime(this);
             _antispawn = new Antispawn(this);
             _antiweapon = new Antiweapon(this);
@@ -30,11 +30,6 @@ namespace Mrucznik
         {
             base.OnConnected(e);
             SetupClientOnConnect(this);
-        }
-        
-        public override void OnDisconnected(DisconnectEventArgs e)
-        {
-            base.OnDisconnected(e);
         }
 
         private static Timer _KickTimer;

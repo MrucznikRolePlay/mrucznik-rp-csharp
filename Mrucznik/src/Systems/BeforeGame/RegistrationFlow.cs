@@ -15,20 +15,19 @@ namespace Mrucznik.Systems.BeforeGame
         public RegistrationFlow(Player player)
         {
             _player = player;
-            _player.SendClientMessage(Color.Yellow, "Aby rozpocząc rozgrywkę musisz się zarejestrować.");
+            _player.SendClientMessage(Color.Yellow, "Aby rozpocząć rozgrywkę musisz się zarejestrować.");
             _registerDialog = new InputDialog("Rejestracja konta", "Witaj. Aby zacząć grę na serwerze musisz się zarejestrować.\nAby to zrobić wpisz w okienko poniżej hasło które chcesz używać w swoim koncie.\nZapamiętaj je gdyż będziesz musiał go używać za każdym razem kiedy wejdziesz na serwer", true, "Zarejestruj się", "Wyjdź");
             _registerDialog.Response += RegisterDialogOnResponse;
         }
 
         private void RegisterDialogOnResponse(object? sender, DialogResponseEventArgs e)
         {
-            _player.Name = $"Niezarejestrowany_{_player.Id}";
             var registerAccountRequest = new RegisterAccountRequest();
             registerAccountRequest.Account = new Account()
             {
                 Email = "mrucznix@gmail.com",
-                Login = _player.Nick,
-                Nick = _player.Nick
+                Login = _player.Name,
+                Nick = _player.Name
             };
             registerAccountRequest.Password = e.InputText;
 

@@ -42,8 +42,6 @@ namespace Mrucznik.Systems.BeforeGame
         private void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
         {
             _player.LoggedIn = true;
-            _player.Name = _player.Nick;
-            _player.Nick = _player.Name;
             _player.Color = Color.White;
             _player.PlaySound(0);
             _player.SetSpawnInfo(0, 0, new Vector3(180.0f, 150.0f, 8.0f), 90.0f);

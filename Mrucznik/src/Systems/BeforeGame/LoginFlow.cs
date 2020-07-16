@@ -20,7 +20,7 @@ namespace Mrucznik.Systems.BeforeGame
             _player.SendClientMessage(Color.Yellow, "Zweryfikuj swoje konto aby kontynuować.");
             _loginDialog = new InputDialog(
                 "Logowanie",
-                $"Witaj {player.Nick}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżli nie znasz hasła do tego konta, wejdź pod innym nickiem.",
+                $"Witaj {player.Name}. Twoje konto jest zarejestrowane\nZaloguj się wpisując w okienko poniżej hasło.\nJeżeli nie znasz hasła do tego konta, wejdź pod innym nickiem.",
                 true,
                 "Zaloguj się", "Wyjdź"
             );
@@ -29,7 +29,7 @@ namespace Mrucznik.Systems.BeforeGame
 
         private void LoginDialogOnResponse(object? sender, DialogResponseEventArgs e)
         {
-            var logInRequest = new LogInRequest() {Login = _player.Nick, Password = e.InputText};
+            var logInRequest = new LogInRequest() {Login = _player.Name, Password = e.InputText};
             try
             {
                 LogInResponse response = MruV.Accounts.LogIn(logInRequest);
