@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
       <PackageReference Include="MruV.Protos" Version="0.6.3" />
+      <PackageReference Include="NLog" Version="4.7.2" />
       <PackageReference Include="SampSharp.Core" Version="0.9.3" />
       <PackageReference Include="SampSharp.GameMode" Version="0.9.1" />
       <PackageReference Include="SampSharp.RakNet" Version="1.0.2" />
