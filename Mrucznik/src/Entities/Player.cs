@@ -4,7 +4,7 @@ using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
 using static Mrucznik.Helpers.PlayerHelpers;
-using Mrucznik.Systems.Anticheat;
+using Mrucznik.Systems.AntiCheat;
 using Mrucznik.Systems.BeforeGame;
 using SampSharp.GameMode.Definitions;
 
@@ -16,15 +16,15 @@ namespace Mrucznik
         public bool InTutorial;
         
         private RealTime _realTime;
-        private Antispawn _antispawn;
-        private Antiweapon _antiweapon;
+        private AntiSpawn _antiSpawn;
+        private AntiWeapon _antiWeapon;
         
         public Player()
         {
             // Init player components
             _realTime = new RealTime(this);
-            _antispawn = new Antispawn(this);
-            _antiweapon = new Antiweapon(this);
+            _antiSpawn = new AntiSpawn(this);
+            _antiWeapon = new AntiWeapon(this);
         }
         public override void OnConnected(EventArgs e)
         {

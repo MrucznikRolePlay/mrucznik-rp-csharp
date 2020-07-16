@@ -9,9 +9,9 @@ namespace Mrucznik.Systems.BeforeGame
 {
     public class CharacterSelectFlow
     {
-        private Player _player;
-        private TablistDialog _dialog;
-        private event EventHandler ChoosedCharacter;
+        private readonly Player _player;
+        private readonly TablistDialog _dialog;
+        private event EventHandler ChosenCharacter;
         
         public CharacterSelectFlow(Player player)
         {
@@ -22,7 +22,7 @@ namespace Mrucznik.Systems.BeforeGame
                 "Nick", "Level"
             }, "Wybierz", "Wyjdź");
             _dialog.Response += DialogOnResponse;
-            ChoosedCharacter += OnPlayerChoosedCharacter;
+            ChosenCharacter += OnPlayerChosenCharacter;
 
         }
 
@@ -35,11 +35,11 @@ namespace Mrucznik.Systems.BeforeGame
             }
             else
             {
-                ChoosedCharacter?.Invoke(_player, EventArgs.Empty);
+                ChosenCharacter?.Invoke(_player, EventArgs.Empty);
             }
         }
 
-        private void OnPlayerChoosedCharacter(object? sender, System.EventArgs e)
+        private void OnPlayerChosenCharacter(object? sender, System.EventArgs e)
         {
             _player.LoggedIn = true;
             _player.Color = Color.White;

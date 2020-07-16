@@ -2,12 +2,12 @@
 using SampSharp.GameMode.Events;
 using System;
 
-namespace Mrucznik.Systems.Anticheat
+namespace Mrucznik.Systems.AntiCheat
 {
-    public class Antispawn
+    public class AntiSpawn
     {
-        private Player _player;
-        public Antispawn(Player player)
+        private readonly Player _player;
+        public AntiSpawn(Player player)
         {
             _player = player;
             _player.Spawned += PlayerOnSpawned;

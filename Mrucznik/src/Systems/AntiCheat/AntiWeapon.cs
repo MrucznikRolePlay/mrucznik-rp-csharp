@@ -1,28 +1,29 @@
 ﻿using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 
-namespace Mrucznik.Systems.Anticheat
+namespace Mrucznik.Systems.AntiCheat
 {
-    public class Antiweapon
+    public class AntiWeapon
     {
-        private Player _player;
-        private int securitylevel;
-        private Timer _AntiweaponTimer;
-        public Antiweapon(Player player)
+        private readonly Player _player;
+        private int _securityLevel;
+        private readonly Timer _antiWeaponTimer;
+        
+        public AntiWeapon(Player player)
         {
             _player = player;
-            _AntiweaponTimer = new Timer(30, true);
-            _AntiweaponTimer.Tick += _AntiweaponTimer_Tick;
+            _antiWeaponTimer = new Timer(30, true);
+            _antiWeaponTimer.Tick += AntiWeaponTimerTick;
             SetSecurityLevel(1);
         }
 
-        private void _AntiweaponTimer_Tick(object sender, System.EventArgs e)
+        private void AntiWeaponTimerTick(object sender, System.EventArgs e)
         {
             var weapon = _player.Weapon;
             if((weapon == Weapon.ThermalGoggles ||
                weapon == Weapon.RocketLauncher ||
                weapon == Weapon.Sawedoff ||
-               weapon == Weapon.Minigun) && securitylevel > 0)
+               weapon == Weapon.Minigun) && _securityLevel > 0)
             {
                 _player.SetArmedWeapon(Weapon.Unarmed);
                 _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za nielegalną broń.");
@@ -33,7 +34,7 @@ namespace Mrucznik.Systems.Anticheat
         public void SetSecurityLevel(int level)
         {
             //level: 0 - wylaczone, 1 - wszystkie bronie oprocz zakazanych, 2 - wszystkie bronie oprocz bc, 3 - żadne bronie
-            securitylevel = level;
+            _securityLevel = level;
         }
     }
 }
