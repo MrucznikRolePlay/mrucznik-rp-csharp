@@ -13,7 +13,7 @@ namespace Mrucznik.Systems
         private Dialog _startDialog;
         private Dialog _previousDialog;
         private int _currentDialog;
-        private Dictionary<int, DialogResponseEventArgs> _responses;
+        private readonly Dictionary<int, DialogResponseEventArgs> _responses = new Dictionary<int, DialogResponseEventArgs>();
         
         public void Show(BasePlayer player)
         {
