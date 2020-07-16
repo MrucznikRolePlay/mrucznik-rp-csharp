@@ -29,7 +29,7 @@ namespace Mrucznik
         public override void OnConnected(EventArgs e)
         {
             base.OnConnected(e);
-            SetupClientOnConnect(this);
+            //SetupClientOnConnect(this);
         }
 
         private static Timer _KickTimer;

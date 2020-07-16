@@ -13,8 +13,26 @@ namespace Mrucznik.Systems
         private Dialog _startDialog;
         private Dialog _previousDialog;
         private int _currentDialog;
-        private readonly Dictionary<int, DialogResponseEventArgs> _responses = new Dictionary<int, DialogResponseEventArgs>();
-        
+
+        private readonly Dictionary<int, DialogResponseEventArgs> _responses =
+            new Dictionary<int, DialogResponseEventArgs>();
+
+        private bool _canExit;
+        private readonly DialogButton _nextButton;
+        private readonly DialogButton _previousButton;
+
+        public DialogFlow() : this(true, DialogButton.Left, DialogButton.Right)
+        {
+        }
+
+        public DialogFlow(bool canExit, DialogButton nextButton = DialogButton.Left,
+            DialogButton previousButton = DialogButton.Right)
+        {
+            _canExit = canExit;
+            _nextButton = nextButton;
+            _previousButton = previousButton;
+        }
+
         public void Show(BasePlayer player)
         {
             _startDialog.Show(player);
@@ -24,47 +42,58 @@ namespace Mrucznik.Systems
         public DialogFlow AddDialog(Dialog dialog)
         {
             _startDialog ??= dialog;
-
-            if (dialog.Button2 != "")
-            {
-                // Add previous dialog button
-                Dialog previous = _previousDialog ?? _startDialog;
-                dialog.Response += (sender, args) =>
-                {
-                    if (args.DialogButton == DialogButton.Left)
-                    {
-                        previous.Show(args.Player);
-                        _currentDialog--;
-                    }
-                };
-            }
-
-            if (_previousDialog != null)
-            {
-                // Add next dialog button
-                DialogButton button = _previousDialog.Button2 == "" ? DialogButton.Left : DialogButton.Right;
-                _previousDialog.Response += (sender, args) =>
-                {
-                    if (args.DialogButton == button)
-                    {
-                        dialog.Show(args.Player);
-                        _responses[_currentDialog] = args;
-                        _currentDialog++;
-                    }
-                };
-            }
-
+            AddPreviousButtonAction(dialog);
+            AddNextButtonAction(_previousDialog, dialog);
             _previousDialog = dialog;
             return this;
         }
 
-        public IDialog End(EventHandler<Dictionary<int, DialogResponseEventArgs>> endAction)
+        public DialogFlow AddDialogs(List<Dialog> dialogs)
         {
-            DialogButton button = _previousDialog.Button2 == "" ? DialogButton.Left : DialogButton.Right;
+            foreach (var dialog in dialogs)
+            {
+                AddDialog(dialog);
+            }
+
+            return this;
+        }
+
+        private void AddPreviousButtonAction(Dialog dialog)
+        {
+            Dialog previous = _previousDialog ?? _startDialog;
+            dialog.Response += (sender, args) =>
+            {
+                if (args.DialogButton == _previousButton)
+                {
+                    if (dialog == previous && _canExit) return;
+                    previous.Show(args.Player);
+                    _currentDialog--;
+                }
+            };
+        }
+
+        private void AddNextButtonAction(Dialog dialog, Dialog nextDialog)
+        {
+            if (dialog == null) return;
+
             _previousDialog.Response += (sender, args) =>
             {
-                if (args.DialogButton == button)
+                if (args.DialogButton == _nextButton)
                 {
+                    nextDialog.Show(args.Player);
+                    _responses[_currentDialog] = args;
+                    _currentDialog++;
+                }
+            };
+        }
+
+        public IDialog End(EventHandler<Dictionary<int, DialogResponseEventArgs>> endAction)
+        {
+            _previousDialog.Response += (sender, args) =>
+            {
+                if (args.DialogButton == _nextButton)
+                {
+                    _responses[_currentDialog] = args;
                     endAction.Invoke(sender, _responses);
                 }
             };
