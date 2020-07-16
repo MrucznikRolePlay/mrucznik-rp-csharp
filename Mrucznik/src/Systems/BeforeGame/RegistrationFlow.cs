@@ -38,7 +38,7 @@ namespace Mrucznik.Systems.BeforeGame
                 if (response.Success)
                 {
                     
-                    new LoginFlow(_player).Start();
+                    new LoginFlow(_player).Show();
                     Tutorial tutorial = new Tutorial(_player);
                     tutorial.RegisterMessage();
                 }

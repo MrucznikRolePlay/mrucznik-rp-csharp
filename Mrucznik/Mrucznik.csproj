@@ -8,14 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
       <PackageReference Include="MruV.Protos" Version="0.6.3" />
       <PackageReference Include="SampSharp.Core" Version="0.9.3" />
       <PackageReference Include="SampSharp.GameMode" Version="0.9.1" />
       <PackageReference Include="SampSharp.RakNet" Version="1.0.2" />
       <PackageReference Include="SampSharp.Streamer" Version="0.9.0" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="src\Commands" />
     </ItemGroup>
 </Project>

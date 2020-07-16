@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Grpc.Core;
 using Mrucznik.Controllers;
 using Mruv.Server;
@@ -6,6 +7,7 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.Controllers;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Events;
+using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
 using Server = SampSharp.GameMode.SAMP.Server;
 
@@ -109,8 +111,13 @@ namespace Mrucznik
             base.OnPlayerCommandText(player, e);
             
             if (e.Success == false)
-            {
-                player.SendClientMessage($"Nie znaleziono komendy: {e.Text}.");
+            {   
+                var commandManager = Services.GetService<ICommandsManager>();
+                
+                Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(e.Text);
+                var similarCommands = commandManager.Commands.OrderBy(command => lev.DistanceFrom(command.ToString())).Take(3);
+                
+                player.SendClientMessage($"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}?");
                 e.Success = true;
                 return;
             }

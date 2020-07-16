@@ -57,7 +57,7 @@ namespace Mrucznik.Systems.BeforeGame
             }
         }
         
-        public void Start()
+        public void Show()
         {
             _loginDialog.Show(_player);
         }

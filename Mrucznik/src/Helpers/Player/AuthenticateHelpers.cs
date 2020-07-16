@@ -12,7 +12,7 @@ namespace Mrucznik.Helpers
             if (check.Exists)
             {
                 var loginFlow = new LoginFlow(_player);
-                loginFlow.Start();
+                loginFlow.Show();
             }
             else
             {
