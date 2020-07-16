@@ -1,47 +1,74 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
+using SampSharp.GameMode.Events;
+using SampSharp.GameMode.World;
 
 namespace Mrucznik.Systems
 {
-    public class DialogFlow : IDialogFlow
+    public class DialogFlow : IDialog
     {
-        ArrayList dialogs = new ArrayList();
-
-        public DialogFlow()
+        private Dialog _startDialog;
+        private Dialog _previousDialog;
+        private int _currentDialog;
+        private Dictionary<int, DialogResponseEventArgs> _responses;
+        
+        public void Show(BasePlayer player)
         {
-            dialogs.Add(new MessageDialog("caption", "message", "button1", "button2"));
-            var d = TablistDialogBuilder.Create()
-                .WithCaption("kox")
-                .WithMessage("elo")
-                .WithLeftButton("Siema")
-                .WithAction(((sender, args) => { Console.WriteLine("Elo"); }))
-                .WithRightButton("PL")
-                .WithAction(((sender, args) => { Console.WriteLine("ENG"); }))
-                .WithResponseAction((sender, args) => { })
-                .Continue()
-                .WithHeaders("kek", "123")
-                .WithRow("123", "123")
-                .Build();
+            _startDialog.Show(player);
+            _currentDialog = 0;
         }
 
-        public void Start()
+        public DialogFlow AddDialog(Dialog dialog)
         {
+            _startDialog ??= dialog;
+
+            if (dialog.Button2 != "")
+            {
+                // Add previous dialog button
+                Dialog previous = _previousDialog ?? _startDialog;
+                dialog.Response += (sender, args) =>
+                {
+                    if (args.DialogButton == DialogButton.Left)
+                    {
+                        previous.Show(args.Player);
+                        _currentDialog--;
+                    }
+                };
+            }
+
+            if (_previousDialog != null)
+            {
+                // Add next dialog button
+                DialogButton button = _previousDialog.Button2 == "" ? DialogButton.Left : DialogButton.Right;
+                _previousDialog.Response += (sender, args) =>
+                {
+                    if (args.DialogButton == button)
+                    {
+                        dialog.Show(args.Player);
+                        _responses[_currentDialog] = args;
+                        _currentDialog++;
+                    }
+                };
+            }
+
+            _previousDialog = dialog;
+            return this;
         }
 
-        public void Next()
+        public IDialog End(EventHandler<Dictionary<int, DialogResponseEventArgs>> endAction)
         {
-        }
-
-        public void Previous()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void AddDialog(Dialog dialog)
-        {
-            throw new System.NotImplementedException();
+            DialogButton button = _previousDialog.Button2 == "" ? DialogButton.Left : DialogButton.Right;
+            _previousDialog.Response += (sender, args) =>
+            {
+                if (args.DialogButton == button)
+                {
+                    endAction.Invoke(sender, _responses);
+                }
+            };
+            return this;
         }
     }
 }
