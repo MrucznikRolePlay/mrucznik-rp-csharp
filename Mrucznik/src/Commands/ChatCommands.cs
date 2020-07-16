@@ -10,23 +10,5 @@ namespace Mrucznik.Commands
         {
             sender.SendClientMessage("Local chat");
         }
-        
-        [Command("okal")]
-        private static void LocalChatCommand2(BasePlayer sender, string text)
-        {
-            sender.SendClientMessage("Local chat");
-        }
-        
-        [Command("pokal")]
-        private static void LocalChatCommand3(BasePlayer sender, string text)
-        {
-            sender.SendClientMessage("Local chat");
-        }
-        
-        [Command("dm2")]
-        private static void LocalChatCommand4(BasePlayer sender, string text)
-        {
-            sender.SendClientMessage("Local chat");
-        }
     }
 }

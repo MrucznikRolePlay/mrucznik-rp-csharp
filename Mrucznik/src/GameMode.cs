@@ -22,7 +22,7 @@ namespace Mrucznik
             base.OnInitialized(e);
 
             var version = GetType().Assembly.GetName().Version?.ToString();
-            
+
             Console.WriteLine("\n----------------------------------");
             Console.WriteLine("M | --- Mrucznik Role Play --- | M");
             Console.WriteLine("R | ---        ****        --- | R");
@@ -78,7 +78,6 @@ namespace Mrucznik
             {
                 Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
             }
-            
         }
 
         protected override void OnExited(EventArgs e)
@@ -109,15 +108,18 @@ namespace Mrucznik
         protected override void OnPlayerCommandText(BasePlayer player, CommandTextEventArgs e)
         {
             base.OnPlayerCommandText(player, e);
-            
+
             if (e.Success == false)
-            {   
+            {
                 var commandManager = Services.GetService<ICommandsManager>();
-                
+
                 Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(e.Text);
-                var similarCommands = commandManager.Commands.OrderBy(command => lev.DistanceFrom(command.ToString())).Take(3);
-                
-                player.SendClientMessage($"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}?");
+                var similarCommands = commandManager.Commands
+                    .OrderBy(command => lev.DistanceFrom(command.ToString()))
+                    .Take(3);
+
+                player.SendClientMessage(
+                    $"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}?");
                 e.Success = true;
                 return;
             }
