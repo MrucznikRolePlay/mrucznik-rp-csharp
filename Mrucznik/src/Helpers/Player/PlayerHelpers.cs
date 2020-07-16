@@ -15,11 +15,6 @@ namespace Mrucznik.Helpers
             return true;
         }
 
-        public static void ClearChat(Player _player)
-        {
-            for(var i=0; i<15; i++)
-            _player.SendClientMessage("");
-        }
         public static void ClearAllChat()
         {
             for (var i = 0; i < 50; i++)
@@ -28,7 +23,7 @@ namespace Mrucznik.Helpers
         }
         public static void SetupClientOnConnect(Player _player)
         {
-            ClearChat(_player);
+            _player.ClearChat();
             _player.SendClientMessage(Color.White, "SERWER: Witaj {0} na serwerze Mrucznik RolePlay!", _player.Name);
             if (IsNameFormatCorrect(_player.Name) == false)
             {
@@ -50,7 +45,5 @@ namespace Mrucznik.Helpers
             });
             ShowAuthFlow(_player);
         }
-        
-       
     }
 }

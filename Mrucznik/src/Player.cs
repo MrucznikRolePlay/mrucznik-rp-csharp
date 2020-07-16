@@ -19,6 +19,7 @@ namespace Mrucznik
         //zmienne
         public bool LoggedIn;
         public bool InTutorial;
+        
         public Player()
         {
             _realTime = new RealTime(this);

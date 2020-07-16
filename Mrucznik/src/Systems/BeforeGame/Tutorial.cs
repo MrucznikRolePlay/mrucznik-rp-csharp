@@ -27,7 +27,7 @@ namespace Mrucznik.Systems.BeforeGame
         {
             if(_TutorialTimer.IsRunning == true)
             {
-				_player.SendClientMessage(Color.DarkRed,"Nie mo¿esz pisaæ podczas tutorialu!");
+				_player.SendClientMessage(Color.DarkRed,"Nie moï¿½esz pisaï¿½ podczas tutorialu!");
 				e.SendToPlayers = false;
             }
         }
@@ -39,15 +39,15 @@ namespace Mrucznik.Systems.BeforeGame
 
         public void RegisterMessage()
         {
-            ClearChat(_player);
+	        _player.ClearChat();
             _player.SendClientMessage(COLOR_YELLOW, "Witaj na Mrucznik Role Play serwer.");
-            _player.SendClientMessage(COLOR_WHITE, "Nie jest to serwer Full-RP ale obowi¹zuj¹ tu podstawowe zasady RP.");
-            _player.SendClientMessage(COLOR_WHITE, "Jeœli ich nie znasz przybli¿e ci najwa¿niejsz¹ zasade.");
-            _player.SendClientMessage(COLOR_LIGHTBLUE, "Obowi¹zuje absolutny zakaz DeathMatch`u(DM)");
+            _player.SendClientMessage(COLOR_WHITE, "Nie jest to serwer Full-RP ale obowiï¿½zujï¿½ tu podstawowe zasady RP.");
+            _player.SendClientMessage(COLOR_WHITE, "Jeï¿½li ich nie znasz przybliï¿½e ci najwaï¿½niejszï¿½ zasade.");
+            _player.SendClientMessage(COLOR_LIGHTBLUE, "Obowiï¿½zuje absolutny zakaz DeathMatch`u(DM)");
             _player.SendClientMessage(COLOR_WHITE, "Co to jest DM? To zabijanie graczy na serwerze bez konkretnego powodu.");
-            _player.SendClientMessage(COLOR_WHITE, "Chodzi o to, ¿e w prawdziwym ¿yciu, nie zabija³byœ wszystkich dooko³a.");
-            _player.SendClientMessage(COLOR_WHITE, "Wiêc jeœli chcesz kogoœ zabiæ, musisz mieæ wa¿ny powód.");
-            _player.SendClientMessage(COLOR_WHITE, "OK, znasz ju¿ najwa¿niejsz¹ zasadê, resztê poznasz póŸniej.");
+            _player.SendClientMessage(COLOR_WHITE, "Chodzi o to, ï¿½e w prawdziwym ï¿½yciu, nie zabijaï¿½byï¿½ wszystkich dookoï¿½a.");
+            _player.SendClientMessage(COLOR_WHITE, "Wiï¿½c jeï¿½li chcesz kogoï¿½ zabiï¿½, musisz mieï¿½ waï¿½ny powï¿½d.");
+            _player.SendClientMessage(COLOR_WHITE, "OK, znasz juï¿½ najwaï¿½niejszï¿½ zasadï¿½, resztï¿½ poznasz pï¿½niej.");
         }
         private void TutorialSend(int part)
         {
@@ -56,12 +56,12 @@ namespace Mrucznik.Systems.BeforeGame
                 _player.Position = new Vector3(849.62371826172, -989.92199707031, -5.0);
                 _player.CameraPosition = new Vector3(849.62371826172, -989.92199707031, 53.211112976074);
                 _player.SetCameraLookAt(new Vector3(907.40313720703, -913.14117431641, 77.788856506348));
-                ClearChat(_player);
-                _player.SendClientMessage(COLOR_PURPLE, "|____ Tutorial: Pocz¹tek ____|");
-                _player.SendClientMessage(COLOR_WHITE, "Ooo... nowy na serwerze.... wiêc musisz o czymœ wiedzieæ.");
-                _player.SendClientMessage(COLOR_WHITE, "Jest to serwer Role Play(RP). Role Playing to odzwierciedlanie realnego ¿ycia w grze.");
-                _player.SendClientMessage(COLOR_WHITE, "Skoro ju¿ wiesz, co to jest Role Play musisz poznaæ zasady panuj¹ce na naszym serwerze.");
-                _player.SendClientMessage(COLOR_WHITE, "W tym celu przejdziesz teraz drobny samouczek tekstowy, który przygotuje Ciê do rozgrywki!");
+                _player.ClearChat();
+                _player.SendClientMessage(COLOR_PURPLE, "|____ Tutorial: Poczï¿½tek ____|");
+                _player.SendClientMessage(COLOR_WHITE, "Ooo... nowy na serwerze.... wiï¿½c musisz o czymï¿½ wiedzieï¿½.");
+                _player.SendClientMessage(COLOR_WHITE, "Jest to serwer Role Play(RP). Role Playing to odzwierciedlanie realnego ï¿½ycia w grze.");
+                _player.SendClientMessage(COLOR_WHITE, "Skoro juï¿½ wiesz, co to jest Role Play musisz poznaï¿½ zasady panujï¿½ce na naszym serwerze.");
+                _player.SendClientMessage(COLOR_WHITE, "W tym celu przejdziesz teraz drobny samouczek tekstowy, ktï¿½ry przygotuje Ciï¿½ do rozgrywki!");
             }
 			else if (part == 14)
 			{
@@ -72,12 +72,12 @@ namespace Mrucznik.Systems.BeforeGame
 			}
 			else if (part == 16)
 			{
-				_player.SendClientMessage(COLOR_WHITE, "Na serwerze obowi¹zuje absolutny zakaz jakiegokolwiek DeathMatch`u(DM).");
-				_player.SendClientMessage(COLOR_WHITE, "Nie chcemy na serwerze osób które bezmyœlnie zabijaj¹ wszystko co siê rusza.");
-				_player.SendClientMessage(COLOR_WHITE, "Chodzi o to, ¿e w prawdziwym ¿yciu, nie zabija³byœ wszystkich dooko³a.");
-				_player.SendClientMessage(COLOR_WHITE, "Wiêc jeœli chcesz kogoœ zabiæ, musisz mieæ naprawdê wa¿ny powód.");
-				_player.SendClientMessage(COLOR_WHITE, "Na serwerze trzeba mieæ nick typu Imie_Nazwisko (np. Jan_Kowalski)");
-				_player.SendClientMessage(COLOR_WHITE, "Jeœli masz inny nick ni¿ Imie_Nazwisko to poproœ admina o zmianê go.");
+				_player.SendClientMessage(COLOR_WHITE, "Na serwerze obowiï¿½zuje absolutny zakaz jakiegokolwiek DeathMatch`u(DM).");
+				_player.SendClientMessage(COLOR_WHITE, "Nie chcemy na serwerze osï¿½b ktï¿½re bezmyï¿½lnie zabijajï¿½ wszystko co siï¿½ rusza.");
+				_player.SendClientMessage(COLOR_WHITE, "Chodzi o to, ï¿½e w prawdziwym ï¿½yciu, nie zabijaï¿½byï¿½ wszystkich dookoï¿½a.");
+				_player.SendClientMessage(COLOR_WHITE, "Wiï¿½c jeï¿½li chcesz kogoï¿½ zabiï¿½, musisz mieï¿½ naprawdï¿½ waï¿½ny powï¿½d.");
+				_player.SendClientMessage(COLOR_WHITE, "Na serwerze trzeba mieï¿½ nick typu Imie_Nazwisko (np. Jan_Kowalski)");
+				_player.SendClientMessage(COLOR_WHITE, "Jeï¿½li masz inny nick niï¿½ Imie_Nazwisko to poproï¿½ admina o zmianï¿½ go.");
 			}
 			else if (part == 30)
 			{
@@ -88,10 +88,10 @@ namespace Mrucznik.Systems.BeforeGame
 			}
 			else if (part == 32)
 			{
-				_player.SendClientMessage(COLOR_WHITE, "Je¿eli widzisz, ¿e ktoœ cheatuje, powiadom administratorów przez komendê /report.");
-				_player.SendClientMessage(COLOR_WHITE, "Nie wolno u¿ywaæ Bugów (np. znasz jakiegoœ buga który daje ci kase).");
-				_player.SendClientMessage(COLOR_WHITE, "Jeœli masz czity, wy³¹cz je i idŸ na jakiœ inny serwer. Tu nie mo¿na czitowaæ.");
-				_player.SendClientMessage(COLOR_WHITE, "Osoba korzystaj¹ca z Cheatów i Bugów mo¿e zostaæ zbanowana lub ostrze¿ona.");
+				_player.SendClientMessage(COLOR_WHITE, "Jeï¿½eli widzisz, ï¿½e ktoï¿½ cheatuje, powiadom administratorï¿½w przez komendï¿½ /report.");
+				_player.SendClientMessage(COLOR_WHITE, "Nie wolno uï¿½ywaï¿½ Bugï¿½w (np. znasz jakiegoï¿½ buga ktï¿½ry daje ci kase).");
+				_player.SendClientMessage(COLOR_WHITE, "Jeï¿½li masz czity, wyï¿½ï¿½cz je i idï¿½ na jakiï¿½ inny serwer. Tu nie moï¿½na czitowaï¿½.");
+				_player.SendClientMessage(COLOR_WHITE, "Osoba korzystajï¿½ca z Cheatï¿½w i Bugï¿½w moï¿½e zostaï¿½ zbanowana lub ostrzeï¿½ona.");
 			}
 			else if (part == 52)
 			{
@@ -102,12 +102,12 @@ namespace Mrucznik.Systems.BeforeGame
 			}
 			else if (part == 54)
 			{
-				_player.SendClientMessage(COLOR_WHITE, "A wiêc musisz wiedzieæ co to jest OOC i IC, oraz poprawnie to interpretowaæ.");
-				_player.SendClientMessage(COLOR_WHITE, "Ta zasada jest bardzo wa¿na, wiêc czytaj uwa¿nie, oraz zapamiêtaj to.");
-				_player.SendClientMessage(COLOR_WHITE, "OOC to wszystko co NIE JEST zwi¹zane z twoj¹ postaci¹.(np. twoja szko³a).");
-				_player.SendClientMessage(COLOR_WHITE, "OOC to wszytskie rzeczy zwi¹zane z tob¹ w realu, oraz z komendami, adminami itp.");
+				_player.SendClientMessage(COLOR_WHITE, "A wiï¿½c musisz wiedzieï¿½ co to jest OOC i IC, oraz poprawnie to interpretowaï¿½.");
+				_player.SendClientMessage(COLOR_WHITE, "Ta zasada jest bardzo waï¿½na, wiï¿½c czytaj uwaï¿½nie, oraz zapamiï¿½taj to.");
+				_player.SendClientMessage(COLOR_WHITE, "OOC to wszystko co NIE JEST zwiï¿½zane z twojï¿½ postaciï¿½.(np. twoja szkoï¿½a).");
+				_player.SendClientMessage(COLOR_WHITE, "OOC to wszytskie rzeczy zwiï¿½zane z tobï¿½ w realu, oraz z komendami, adminami itp.");
 				_player.SendClientMessage(COLOR_WHITE, "Rzeczy OOC piszemy w chatach: /b /o /i oraz /ro i /depo");
-				_player.SendClientMessage(COLOR_WHITE, "Poprawnie napisany tekst OOC: /b elo, jesteœ adminem? /b jak tam w szkole? itp.");
+				_player.SendClientMessage(COLOR_WHITE, "Poprawnie napisany tekst OOC: /b elo, jesteï¿½ adminem? /b jak tam w szkole? itp.");
 			}
 			else if (part == 74)
 			{
@@ -118,10 +118,10 @@ namespace Mrucznik.Systems.BeforeGame
 			}
 			else if (part == 76)
 			{
-				_player.SendClientMessage(COLOR_WHITE, "Musisz te¿ wiedzieæ co to jest IC, oraz poprawnie to interpretowaæ.");
-				_player.SendClientMessage(COLOR_WHITE, "IC to tak jakby przeciwnoœæ OOC. To wszystko co JEST zwi¹zane z twoj¹ postaci¹.");
-				_player.SendClientMessage(COLOR_WHITE, "Rzeczy IC piszemy w chatach: /l /s /k /t /ad oraz w zwyk³ym chacie itp.");
-				_player.SendClientMessage(COLOR_WHITE, "Poprawnie napisany teskt IC: /l witam pana /k staæ policja, rêce do góry! itp.");
+				_player.SendClientMessage(COLOR_WHITE, "Musisz teï¿½ wiedzieï¿½ co to jest IC, oraz poprawnie to interpretowaï¿½.");
+				_player.SendClientMessage(COLOR_WHITE, "IC to tak jakby przeciwnoï¿½ï¿½ OOC. To wszystko co JEST zwiï¿½zane z twojï¿½ postaciï¿½.");
+				_player.SendClientMessage(COLOR_WHITE, "Rzeczy IC piszemy w chatach: /l /s /k /t /ad oraz w zwykï¿½ym chacie itp.");
+				_player.SendClientMessage(COLOR_WHITE, "Poprawnie napisany teskt IC: /l witam pana /k staï¿½ policja, rï¿½ce do gï¿½ry! itp.");
 			}
 			else if (part == 96)
 			{
@@ -133,26 +133,26 @@ namespace Mrucznik.Systems.BeforeGame
 			else if (part == 98)
 			{
 				_player.SendClientMessage(COLOR_WHITE, "MG (MetaGamming) - to wykorzystywanie informacji OOC do IC.");
-				_player.SendClientMessage(COLOR_WHITE, "Czyli widzisz nick nad g³ow¹ gracza i mówisz do niego na chacie IC po imieniu");
-				_player.SendClientMessage(COLOR_WHITE, "Lub wtedy gdy ktoœ mówi na /b jestem liderem LCN, a ty siê go pytasz o pracê w LCN");
-				_player.SendClientMessage(COLOR_WHITE, "PG - to zmuszanie kogoœ do akcji RP, mimo i¿ ta osoba tego nie chce.");
-				_player.SendClientMessage(COLOR_WHITE, "Czyli np. ktoœ podchodzisz do kogoœ i dajesz /me bije Johna tak ¿e umiera, to jest PG.");
+				_player.SendClientMessage(COLOR_WHITE, "Czyli widzisz nick nad gï¿½owï¿½ gracza i mï¿½wisz do niego na chacie IC po imieniu");
+				_player.SendClientMessage(COLOR_WHITE, "Lub wtedy gdy ktoï¿½ mï¿½wi na /b jestem liderem LCN, a ty siï¿½ go pytasz o pracï¿½ w LCN");
+				_player.SendClientMessage(COLOR_WHITE, "PG - to zmuszanie kogoï¿½ do akcji RP, mimo iï¿½ ta osoba tego nie chce.");
+				_player.SendClientMessage(COLOR_WHITE, "Czyli np. ktoï¿½ podchodzisz do kogoï¿½ i dajesz /me bije Johna tak ï¿½e umiera, to jest PG.");
 			}
 			else if (part == 112)
 			{
 				_player.Position = new Vector3(412.80743408203, -1312.4066162109, -5.0);
 				_player.CameraPosition = new Vector3(402.2776184082, -1351.4703369141, 43.704566955566);// kamera
 				_player.SetCameraLookAt(new Vector3(412.80743408203, -1312.4066162109, 39.677307128906));// patrz
-				_player.SendClientMessage(COLOR_PURPLE, "|____ Tutorial: zakoñczenie ____|");
+				_player.SendClientMessage(COLOR_PURPLE, "|____ Tutorial: zakoï¿½czenie ____|");
 			}
 			else if (part == 114)
 			{
 				_player.SendClientMessage(COLOR_WHITE, "Masz sie trzymac wymienionych zasad zrozumiano?.");
-				_player.SendClientMessage(COLOR_WHITE, "Poprostu pamiêtaj o nich i ciesz siê gr¹, a jak nie... ");
-				_player.SendClientMessage(COLOR_WHITE, "Zapewne masz jeszcze sporo pytañ dotycz¹cych gry. Spokojnie, znajdziesz na nie odpowiedŸ!");
-				_player.SendClientMessage(COLOR_WHITE, "Mo¿esz œmia³o pytaæ administratora (/admins), poprzez zapytania (/zapytaj), b¹dŸ te¿ [.]");
-				_player.SendClientMessage(COLOR_WHITE, "[.] poprzez chat dla nowych graczy /newbie. To ju¿ koniec samouczka. ");
-				_player.SendClientMessage(COLOR_WHITE, "Zasad, poradników i pomocy jest znacznie wiêcej na naszym forum! OdwiedŸ je: https://mrucznik-rp.pl");
+				_player.SendClientMessage(COLOR_WHITE, "Poprostu pamiï¿½taj o nich i ciesz siï¿½ grï¿½, a jak nie... ");
+				_player.SendClientMessage(COLOR_WHITE, "Zapewne masz jeszcze sporo pytaï¿½ dotyczï¿½cych gry. Spokojnie, znajdziesz na nie odpowiedï¿½!");
+				_player.SendClientMessage(COLOR_WHITE, "Moï¿½esz ï¿½miaï¿½o pytaï¿½ administratora (/admins), poprzez zapytania (/zapytaj), bï¿½dï¿½ teï¿½ [.]");
+				_player.SendClientMessage(COLOR_WHITE, "[.] poprzez chat dla nowych graczy /newbie. To juï¿½ koniec samouczka. ");
+				_player.SendClientMessage(COLOR_WHITE, "Zasad, poradnikï¿½w i pomocy jest znacznie wiï¿½cej na naszym forum! Odwiedï¿½ je: https://mrucznik-rp.pl");
 			}
 			else if(part == 124)
             {
