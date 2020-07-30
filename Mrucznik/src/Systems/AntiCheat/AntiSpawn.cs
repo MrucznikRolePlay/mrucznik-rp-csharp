@@ -25,7 +25,7 @@ namespace Mrucznik.Systems.AntiCheat
         
         private void PlayerOnSpawned(object? sender, SpawnEventArgs e)
         {
-            if(_player.LoggedIn == false || _player.InTutorial == true)
+            if(_player.LoggedIn == false)
             {
                 _player.SendClientMessage(Color.Red, "Zostałeś wyrzucony z serwera za nielegalny spawn.");
                 _player.Kick();

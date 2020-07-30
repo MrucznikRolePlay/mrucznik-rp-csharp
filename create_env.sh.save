@@ -1,0 +1,13 @@
+mkdir -p env
+
+# Get SAMP server
+wget https://sa-mp.co.id/files/samp03DLsvr_R1.tar.gz
+tar -xzf samp03DLsvr_R1.tar.gz -C ./env --strip-components=1
+rm samp03DLsvr_R1.tar.gz
+
+# Get SampSharp
+wget https://github.com/ikkentim/SampSharp/releases/download/0.9.3/SampSharp-0.9.3.zip && \
+    unzip SampSharp-0.9.3.zip && \
+    cp -r SampSharp-0.9.3/* /home/samp && \
+    rm -r SampSharp-0.9.3 && rm SampSharp-0.9.3.zip		
+

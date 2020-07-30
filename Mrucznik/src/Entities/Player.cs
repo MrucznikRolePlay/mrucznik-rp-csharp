@@ -6,14 +6,16 @@ using SampSharp.GameMode.World;
 using static Mrucznik.Helpers.PlayerHelpers;
 using Mrucznik.Systems.AntiCheat;
 using Mrucznik.Systems.BeforeGame;
+using Mruv;
 using SampSharp.GameMode.Definitions;
 
 namespace Mrucznik
 {
     public class Player : BasePlayer
     {
+        public Account PlayerAccount;
+        public Character PlayerCharacter;
         public bool LoggedIn;
-        public bool InTutorial;
         
         private RealTime _realTime;
         private AntiSpawn _antiSpawn;
@@ -32,21 +34,18 @@ namespace Mrucznik
             //SetupClientOnConnect(this);
         }
 
-        private static Timer _KickTimer;
         public override void Kick()
         {
-            _KickTimer = new Timer(10, false);
-            _KickTimer.Tick += _KickTimer_Executed;
+            var timer = new Timer(10, false);
+            timer.Tick += (sender, args) =>
+            {
+                if(IsConnected) base.Kick();
+            };
         }
         public override void SendPlayerMessageToAll(string message)
         {
-            if (InTutorial == true) return;
+            if (LoggedIn == true) return;
             base.SendPlayerMessageToAll(message);
-        }
-        private void _KickTimer_Executed(object sender, EventArgs e)
-        {
-            if(IsConnected) base.Kick();
-            _KickTimer.Dispose();
         }
     }
 }

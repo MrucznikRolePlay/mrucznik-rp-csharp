@@ -15,7 +15,6 @@ namespace Mrucznik.Systems.BeforeGame
         {
             _player = player;
             _tutorialTime = 0;
-			_player.InTutorial = true;
 			_player.Disconnected += TutorialOnDisconnect;
 			_player.Text += TutorialOnText;
         }
@@ -150,10 +149,6 @@ namespace Mrucznik.Systems.BeforeGame
 				_player.SendClientMessage(Color.White, "Mo�esz �mia�o pyta� administratora (/admins), poprzez zapytania (/zapytaj), b�d� te� [.]");
 				_player.SendClientMessage(Color.White, "[.] poprzez chat dla nowych graczy /newbie. To ju� koniec samouczka. ");
 				_player.SendClientMessage(Color.White, "Zasad, poradnik�w i pomocy jest znacznie wi�cej na naszym forum! Odwied� je: https://mrucznik-rp.pl");
-			}
-			else if(part == 124)
-            {
-				_player.InTutorial = false;
 			}
         }
         private void SetTutorialLogic()
