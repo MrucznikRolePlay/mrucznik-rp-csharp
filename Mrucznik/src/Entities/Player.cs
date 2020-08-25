@@ -1,19 +1,13 @@
 using System;
-using SampSharp.GameMode;
-using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
-using static Mrucznik.Helpers.PlayerHelpers;
 using Mrucznik.Systems.AntiCheat;
-using Mrucznik.Systems.BeforeGame;
 using Mruv;
-using SampSharp.GameMode.Definitions;
 
 namespace Mrucznik
 {
     public class Player : BasePlayer
     {
-        public Account PlayerAccount;
         public Character PlayerCharacter;
         public bool LoggedIn;
         

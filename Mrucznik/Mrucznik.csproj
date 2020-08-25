@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
-      <PackageReference Include="MruV.Protos" Version="0.6.3" />
+      <PackageReference Include="MruV.Protos" Version="0.7.5" />
       <PackageReference Include="NLog" Version="4.7.2" />
       <PackageReference Include="NLog.Targets.ElasticSearch" Version="7.3.0" />
       <PackageReference Include="SampSharp.Core" Version="0.9.3" />

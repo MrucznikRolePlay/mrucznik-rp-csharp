@@ -23,12 +23,8 @@ namespace Mrucznik.Systems.BeforeGame
         private void RegisterDialogOnResponse(object? sender, DialogResponseEventArgs e)
         {
             var registerAccountRequest = new RegisterAccountRequest();
-            registerAccountRequest.Account = new Account()
-            {
-                Email = "mrucznix@gmail.com",
-                Login = _player.Name,
-                Nick = _player.Name
-            };
+            registerAccountRequest.Email = "mrucznix@gmail.com";
+            registerAccountRequest.Login = _player.Name;
             registerAccountRequest.Password = e.InputText;
 
             try

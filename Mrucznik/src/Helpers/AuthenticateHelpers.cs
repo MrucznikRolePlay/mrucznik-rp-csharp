@@ -7,7 +7,7 @@ namespace Mrucznik.Helpers
     {
         public static void ShowAuthFlow(Player _player)
         {
-            var check = MruV.Accounts.IsAccountExists(new IsAccountExistsRequest() { Login = _player.Name });
+            var check = MruV.Accounts.IsAccountExist(new IsAccountExistRequest() { Login = _player.Name });
             _player.Name = $"Niezalogowany_{_player.Id}";
             if (check.Exists)
             {
