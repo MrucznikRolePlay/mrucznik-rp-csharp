@@ -15,6 +15,8 @@ namespace Mrucznik
 {
     public class GameMode : BaseMode
     {
+        private Objects.Objects _objects;
+        
         #region Overrides of BaseMode
 
         protected override void OnInitialized(EventArgs e)
@@ -37,6 +39,9 @@ namespace Mrucznik
             Console.WriteLine("P | ---         O          --- | P");
             Console.WriteLine("----------------------------------");
 
+            // temp skin
+            AddPlayerClass(0, new Vector3(598.2130, -1491.1135, 15.1351), 0.0f);
+            
             //Ustawienia SAMP'a
             SetGameModeText($"Mrucznik-RP v{version}");
             AllowInteriorWeapons(true);
@@ -78,6 +83,9 @@ namespace Mrucznik
             {
                 Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
             }
+            
+            // Create objects
+            _objects = new Objects.Objects();
         }
 
         protected override void OnExited(EventArgs e)

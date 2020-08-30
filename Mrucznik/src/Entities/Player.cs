@@ -19,7 +19,7 @@ namespace Mrucznik
         {
             // Init player components
             _realTime = new RealTime(this);
-            _antiSpawn = new AntiSpawn(this);
+            //_antiSpawn = new AntiSpawn(this);
             _antiWeapon = new AntiWeapon(this);
         }
         public override void OnConnected(EventArgs e)
