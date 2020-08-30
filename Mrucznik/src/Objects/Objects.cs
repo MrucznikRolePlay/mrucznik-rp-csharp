@@ -1,36 +1,49 @@
-
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Grpc.Core;
 using Mruv.Objects;
-using NLog.Fluent;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.World;
 using SampSharp.Streamer.World;
 
 namespace Mrucznik.Objects
 {
     public class Objects
     {
+        public List<RemovedBuilding> RemovedBuildings { private set; get; }
         public readonly Dictionary<int, DynamicObject> ObjectsIDs = new Dictionary<int, DynamicObject>();
-        
+
         public Objects()
         {
             LoadObjects();
-            new DynamicObject(347, new Vector3(2226.0696, -1718.3290, 13.5182),
-                new Vector3(-90.0000000, 0.0000000, 0.0000000), 0, 0);
-            new DynamicObject(347, new Vector3(2226.0696, -1718.3290, 13.5182),
-                new Vector3(-90.0000000, 0.0000000, 0.0000000), 0, 0);
+            LoadRemoveBuidings();
         }
 
-        public void LoadObjects()
+        public void RemoveBuildingsForPlayer(BasePlayer player)
+        {
+            foreach (var b in RemovedBuildings)
+            {
+                GlobalObject.Remove(null, (int) b.Model, new Vector3(b.X, b.Y, b.Z), b.Radius);
+            }
+        }
+
+        private void LoadRemoveBuidings()
+        {
+            Console.Write("Loading removed buildings...");
+            var request = new GetRemovedBuildingsRequest() { };
+            var result = MruV.Objects.GetRemovedBuildings(request);
+            RemovedBuildings = new List<RemovedBuilding>(result.RemovedBuilding);
+            Console.WriteLine("\nBuildings removed.");
+        }
+
+        private void LoadObjects()
         {
             Console.Write("Loading objects..");
-            var request = new FetchAllRequest{ChunkSize = 10000};
+            var request = new FetchAllRequest {ChunkSize = 10000};
             var call = MruV.Objects.FetchAll(request);
             {
-                while(true)
+                while (true)
                 {
                     var next = call.ResponseStream.MoveNext();
                     next.Wait();
@@ -38,6 +51,7 @@ namespace Mrucznik.Objects
                     {
                         break;
                     }
+
                     Console.Write(".");
                     foreach (var currentObject in call.ResponseStream.Current.Objects)
                     {
@@ -53,7 +67,7 @@ namespace Mrucznik.Objects
                             dynamicObject.SetMaterial((int) material.Key, material.Value.ModelId,
                                 material.Value.TxdName, material.Value.TextureName, material.Value.MaterialColor);
                         }
-                            
+
                         foreach (var materialText in o.MaterialTexts)
                         {
                             var mt = materialText.Value;
@@ -62,6 +76,7 @@ namespace Mrucznik.Objects
                                 mt.FontFace, (int) mt.FontSize, mt.Bold, mt.FontColor, mt.BackColor,
                                 (ObjectMaterialTextAlign) mt.TextAlignment);
                         }
+
                         ObjectsIDs[currentObject.Key] = dynamicObject;
                     }
                 }
@@ -69,6 +84,5 @@ namespace Mrucznik.Objects
             call.Dispose();
             Console.WriteLine("\nObjects loaded.");
         }
-        
     }
 }

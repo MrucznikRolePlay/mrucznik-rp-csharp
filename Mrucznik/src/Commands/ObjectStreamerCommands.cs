@@ -13,27 +13,19 @@ namespace Mrucznik.Commands
 {
     public class ObjectStreamerCommands
     {
-        [Command("streamerobjects")]
+        [Command("objects")]
         private static void StreamerObjects(BasePlayer sender)
         {
             sender.SendClientMessage($"Streamer objects: {SampSharp.Streamer.World.DynamicObject.All.Count()}");
         }
         
-        [Command("updatestreamer")]
-        private static void UpdateStreamer(BasePlayer sender)
-        {
-            Streamer.Update(sender);
-            DynamicObject.ToggleAllItems(sender, true, new DynamicObject[]{});
-            sender.SendClientMessage("Streamer updated.");
-        }
-        
-        [Command("streamerobjectslist")]
+        [Command("objectslist")]
         private static void StreamerObjectsList(BasePlayer sender, int page=0)
         {
             var objects = DynamicObject.All.Skip(50*page).Take(50);
             var tablistDialog = new TablistDialog($"Obiekty - strona {page}", 
                 new []{"ID", "Model", "VW", "INT"}, 
-                "Goto", "Next");
+                "Teleport", "Następny");
             bool ok = false;
             foreach (var o in objects)
             {
@@ -69,11 +61,11 @@ namespace Mrucznik.Commands
             var o = SampSharp.Streamer.World.DynamicObject.Find(objectId);
             if(o != null)
             {
-                sender.SendClientMessage($"You have been teleported to object {objectId}, position: {o.Position}.");
+                sender.SendClientMessage($"Zostałeś teleportowany do obiektu o ID {objectId}, pozycja: {o.Position}.");
             }
             else
             {
-                sender.SendClientMessage($"Object of id {objectId} not found.");
+                sender.SendClientMessage($"Nie znaleziono obiektu o ID {objectId}.");
             }
         }
     }

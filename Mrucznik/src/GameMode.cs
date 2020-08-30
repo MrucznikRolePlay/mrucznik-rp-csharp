@@ -16,7 +16,7 @@ namespace Mrucznik
     public class GameMode : BaseMode
     {
         private Objects.Objects _objects;
-        
+
         #region Overrides of BaseMode
 
         protected override void OnInitialized(EventArgs e)
@@ -42,7 +42,7 @@ namespace Mrucznik
             // temp skin
             AddPlayerClass(0, new Vector3(2226.0696, -1718.3290, 13.5182), 0.0f);
             AddPlayerClass(13, new Vector3(-2571.25, 2316.0, 5.2), 0.0f);
-            
+
             //Ustawienia SAMP'a
             SetGameModeText($"Mrucznik-RP v{version}");
             AllowInteriorWeapons(true);
@@ -85,7 +85,7 @@ namespace Mrucznik
             {
                 Console.WriteLine($"MruV API Error[{err.Status.StatusCode}]: {err.Status.Detail}");
             }
-            
+
             // Create objects
             _objects = new Objects.Objects();
         }
@@ -115,24 +115,11 @@ namespace Mrucznik
             controllers.Override(new PlayerController());
         }
 
-        protected override void OnPlayerCommandText(BasePlayer player, CommandTextEventArgs e)
+        protected override void OnPlayerConnected(BasePlayer player, EventArgs e)
         {
-            base.OnPlayerCommandText(player, e);
+            base.OnPlayerConnected(player, e);
 
-            if (e.Success == false)
-            {
-                var commandManager = Services.GetService<ICommandsManager>();
-
-                Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(e.Text);
-                var similarCommands = commandManager.Commands
-                    .OrderBy(command => lev.DistanceFrom(command.ToString()))
-                    .Take(3);
-
-                player.SendClientMessage(
-                    $"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}");
-                e.Success = true;
-                return;
-            }
+            _objects.RemoveBuildingsForPlayer(player);
         }
 
         #endregion
