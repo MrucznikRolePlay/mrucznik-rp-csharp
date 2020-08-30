@@ -40,7 +40,8 @@ namespace Mrucznik
             Console.WriteLine("----------------------------------");
 
             // temp skin
-            AddPlayerClass(0, new Vector3(598.2130, -1491.1135, 15.1351), 0.0f);
+            AddPlayerClass(0, new Vector3(2226.0696, -1718.3290, 13.5182), 0.0f);
+            AddPlayerClass(13, new Vector3(-2571.25, 2316.0, 5.2), 0.0f);
             
             //Ustawienia SAMP'a
             SetGameModeText($"Mrucznik-RP v{version}");
@@ -51,6 +52,7 @@ namespace Mrucznik
             ManualVehicleEngineAndLights();
             ShowNameTags(true);
             SetNameTagDrawDistance(70.0f);
+            //UsePlayerPedAnimations(); //CJ run on all skins when enabled
             Server.SetWeather(2);
 
             // Connect to MruV API
@@ -127,7 +129,7 @@ namespace Mrucznik
                     .Take(3);
 
                 player.SendClientMessage(
-                    $"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}?");
+                    $"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}");
                 e.Success = true;
                 return;
             }

@@ -7,6 +7,18 @@ namespace Mrucznik.Commands
 {
     public class DevelopmentCommands
     {
+        [Command("getvw")]
+        private static void GetVirtualWorld(BasePlayer sender)
+        {
+            sender.SendClientMessage($"Twój wirtual world to: {sender.VirtualWorld}");
+        }
+        
+        [Command("getint")]
+        private static void GetInterior(BasePlayer sender)
+        {
+            sender.SendClientMessage($"Twój interior to: {sender.Interior}");
+        }
+        
         [Command("testdialogflow")]
         private static void TestDialogFlow(BasePlayer sender)
         {
