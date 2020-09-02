@@ -47,14 +47,15 @@ namespace Mrucznik
 
             if (_editingMode)
             {
-                DynamicTextLabel.Position = e.Position;
                 if (e.Response == EditObjectResponse.Update)
                 {
                     e.Player.SendClientMessage($"Edytujesz obiekt: {GetModelName(ModelId)}");
+                    DynamicTextLabel.Position = e.Position;
                 }
                 else if (e.Response == EditObjectResponse.Final)
                 {
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {GetModelName(ModelId)}");
+                    DynamicTextLabel.Position = e.Position;
                     _editingMode = false;
                 }
                 else if (e.Response == EditObjectResponse.Cancel)
@@ -67,6 +68,7 @@ namespace Mrucznik
             }
             else
             {
+                e.Player.SendClientMessage($"Wchodzisz w tryb edycji obiektu: {GetModelName(ModelId)}");
                 _editingMode = true;
                 _lastPosition = Position;
                 OnEdited(e);
