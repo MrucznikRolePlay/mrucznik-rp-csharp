@@ -85,25 +85,27 @@ namespace Mrucznik
             MruV.Objects.UpdateObjectAsync(new UpdateObjectRequest()
             {
                 Id = ApiId,
-                Object = new Object()
-                {
-                    Model = ModelId,
-                    X = Position.X,
-                    Y = Position.Y,
-                    Z = Position.Z,
-                    Rx = Rotation.X,
-                    Ry = Rotation.Y,
-                    Rz = Rotation.Z,
-                    WorldId = World,
-                    InteriorId = Interior,
-                    PlayerId = -1,
-                    AreaId = -1,
-                    StreamDistance = StreamDistance,
-                    DrawDistance = DrawDistance,
-                    Priority = Priority,
-                    EstateId = EstateId
-                },
+                Object = this
             });
         }
+
+        public static implicit operator Object(MruDynamicObject o) => new Object()
+        {
+            Model = o.ModelId,
+            X = o.Position.X,
+            Y = o.Position.Y,
+            Z = o.Position.Z,
+            Rx = o.Rotation.X,
+            Ry = o.Rotation.Y,
+            Rz = o.Rotation.Z,
+            WorldId = o.World,
+            InteriorId = o.Interior,
+            PlayerId = -1,
+            AreaId = -1,
+            StreamDistance = o.StreamDistance,
+            DrawDistance = o.DrawDistance,
+            Priority = o.Priority,
+            EstateId = o.EstateId
+        };
     }
 }
