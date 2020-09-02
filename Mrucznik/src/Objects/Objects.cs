@@ -1,23 +1,37 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Grpc.Core;
+using Grpc.Core.Utils;
 using Mruv.Objects;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer.World;
+using Status = Google.Rpc.Status;
 
 namespace Mrucznik.Objects
 {
     public class Objects
     {
         public List<RemovedBuilding> RemovedBuildings { private set; get; }
-        public readonly Dictionary<int, DynamicObject> ObjectsIDs = new Dictionary<int, DynamicObject>();
-
+        public static readonly Dictionary<int, DynamicObject> ObjectsIDs = new Dictionary<int, DynamicObject>();
+        public static ConcurrentDictionary<int,ObjectModel> ObjectModels = new ConcurrentDictionary<int, ObjectModel>();
+    
         public Objects()
         {
-            LoadObjects();
-            LoadRemoveBuidings();
+            try
+            {
+                LoadModels().Wait();
+                LoadObjects();
+                LoadRemoveBuidings();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public void RemoveBuildingsForPlayer(BasePlayer player)
@@ -28,6 +42,29 @@ namespace Mrucznik.Objects
             }
         }
 
+        private async Task LoadModels()
+        {
+            Console.Write("Loading object models...");
+            var request = new FetchAllModelsRequest() {ChunkSize = 1000};
+            using var call = MruV.Models.FetchAllModels(request);
+            while (true)
+            {
+                var next = call.ResponseStream.MoveNext();
+                next.Wait();
+                if (next.Result == false)
+                {
+                    break;
+                }
+
+                Console.Write(".");
+                foreach (var objectModel in call.ResponseStream.Current.Models)
+                {
+                    ObjectModels.TryAdd(objectModel.Key, objectModel.Value);
+                }
+            }
+            Console.WriteLine("\nModels loaded.");
+        }
+        
         private void LoadRemoveBuidings()
         {
             Console.Write("Loading removed buildings...");
@@ -41,7 +78,7 @@ namespace Mrucznik.Objects
         {
             Console.Write("Loading objects..");
             var request = new FetchAllObjectsRequest {ChunkSize = 10000};
-            var call = MruV.Objects.FetchAllObjects(request);
+            using(var call = MruV.Objects.FetchAllObjects(request))
             {
                 while (true)
                 {
@@ -81,7 +118,6 @@ namespace Mrucznik.Objects
                     }
                 }
             }
-            call.Dispose();
             Console.WriteLine("\nObjects loaded.");
         }
     }
