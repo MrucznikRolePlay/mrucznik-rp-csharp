@@ -48,7 +48,8 @@ namespace Mrucznik.Commands
                 if (args.DialogButton == DialogButton.Left)
                 {
                     sender.SendClientMessage($"Zostałeś teleportowany do obiektu: {args.InputText}");
-                    sender.SetPositionFindZ(DynamicObject.All.ElementAt(page * 50 + args.ListItem).Position);
+                    // sender.SetPositionFindZ(DynamicObject.All.ElementAt(page * 50 + args.ListItem).Position);
+                    sender.Position = DynamicObject.All.ElementAt(page * 50 + args.ListItem).Position;
                 }
                 else
                 {
@@ -62,10 +63,11 @@ namespace Mrucznik.Commands
         [Command("gotoobject")]
         private static void GotoObject(BasePlayer sender, int objectId)
         {
-            var o = SampSharp.Streamer.World.DynamicObject.Find(objectId);
+            var o = DynamicObject.Find(objectId);
             if (o != null)
             {
                 sender.SendClientMessage($"Zostałeś teleportowany do obiektu o ID {objectId}, pozycja: {o.Position}.");
+                sender.Position = o.Position;
             }
             else
             {
@@ -74,35 +76,46 @@ namespace Mrucznik.Commands
         }
 
         [Command("selectobject", Shortcut = "sel")]
-        private static void SelectObject(BasePlayer sender, int objectId = -1)
+        private static void SelectObject(Player sender, int objectId = -1)
         {
             if (objectId == -1)
             {
-                ((Player) sender).ObjectEditorState = ObjectEditorState.Edit;
-                GlobalObject.Select(sender);
-            }
-            else
-            {
-                GlobalObject.Find(objectId).Edit(sender);
-            }
-        }
-
-        [Command("deleteobject", "odel", "odelete", "deleteo", Shortcut = "delo")]
-        private static void DeleteObject(BasePlayer sender, int objectId=-1)
-        {
-            if (objectId == -1)
-            {
-                ((Player) sender).ObjectEditorState = ObjectEditorState.Delete;
+                sender.ObjectEditorState = ObjectEditorState.Edit;
                 GlobalObject.Select(sender);
             }
             else
             {
                 var o = DynamicObject.Find(objectId);
-                if (o != null && o.IsValid)
+                if (o == null || !o.IsValid)
                 {
-                    sender.SendClientMessage($"Usunąłeś obiekt {o}");
-                    o.Dispose();
+                    sender.SendClientMessage($"Nie znaleziono obiektu o id {objectId}.");
+                    return;
                 }
+                
+                sender.ObjectEditorState = ObjectEditorState.Edit;
+                o.Edit(sender);
+            }
+        }
+
+        [Command("deleteobject", "odel", "odelete", "deleteo", Shortcut = "delo")]
+        private static void DeleteObject(Player sender, int objectId=-1)
+        {
+            if (objectId == -1)
+            {
+                sender.ObjectEditorState = ObjectEditorState.Delete;
+                GlobalObject.Select(sender);
+            }
+            else
+            {
+                var o = DynamicObject.Find(objectId);
+                if (o == null || !o.IsValid)
+                {
+                    sender.SendClientMessage($"Nie znaleziono obiektu o id {objectId}.");
+                    return;
+                }
+                
+                sender.SendClientMessage($"Usunąłeś obiekt {o}");
+                o.Dispose();
             }
         }
 

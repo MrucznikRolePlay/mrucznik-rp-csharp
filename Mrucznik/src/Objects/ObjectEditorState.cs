@@ -4,6 +4,7 @@ namespace Mrucznik.Objects
     {
         None,
         Edit,
-        Delete
+        Delete,
+        Create
     }
 }
