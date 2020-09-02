@@ -3,12 +3,14 @@ using System.Linq;
 using Grpc.Core;
 using Mrucznik.Controllers;
 using Mruv.Server;
+using SampSharp.Core.Logging;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Controllers;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
+using SampSharp.Streamer;
 using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik
@@ -111,8 +113,9 @@ namespace Mrucznik
         protected override void LoadControllers(ControllerCollection controllers)
         {
             base.LoadControllers(controllers);
-
+            
             controllers.Override(new PlayerController());
+            controllers.Override(new MruDynamicObjectController());
         }
 
         protected override void OnPlayerConnected(BasePlayer player, EventArgs e)

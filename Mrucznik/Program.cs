@@ -25,6 +25,7 @@
 
 using Grpc.Core;
 using SampSharp.Core;
+using SampSharp.Core.Logging;
 
 namespace Mrucznik
 {
@@ -34,6 +35,7 @@ namespace Mrucznik
         {
             new GameModeBuilder()
                 .Use<GameMode>()
+                .UseLogLevel(CoreLogLevel.Debug)
                 //.UseTcpClient("54.37.136.94", 8888)
                 .UseStartBehaviour(GameModeStartBehaviour.Gmx)
                 .Run();

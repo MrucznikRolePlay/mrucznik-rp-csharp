@@ -93,7 +93,7 @@ namespace Mrucznik.Objects
                     foreach (var currentObject in call.ResponseStream.Current.Objects)
                     {
                         var o = currentObject.Value;
-                        var dynamicObject = new DynamicObject((int) o.Model,
+                        var dynamicObject = new MruDynamicObject((int) o.Model,
                             new Vector3(o.X, o.Y, o.Z),
                             new Vector3(o.Rx, o.Ry, o.Rz),
                             o.WorldId, o.InteriorId, null, o.StreamDistance, o.DrawDistance,

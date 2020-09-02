@@ -1,3 +1,4 @@
+using System;
 using SampSharp.GameMode;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
@@ -21,8 +22,15 @@ namespace Mrucznik
 
         private void Object3DText(int modelid, Vector3 position)
         {
-            var model = Objects.Objects.ObjectModels[modelid];
-            DynamicTextLabel = new DynamicTextLabel($"Name: {model.Name}\nObject ID: {this.Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+            if (Objects.Objects.ObjectModels.ContainsKey(modelid))
+            {
+                var model = Objects.Objects.ObjectModels[modelid];
+                DynamicTextLabel = new DynamicTextLabel($"{model.Name}\nID: {this.Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+            }
+            else
+            {
+                DynamicTextLabel = new DynamicTextLabel($"ID: {this.Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+            }
         }
     }
 }

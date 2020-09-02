@@ -1,8 +1,5 @@
-using SampSharp.GameMode;
-using SampSharp.GameMode.Controllers;
-using SampSharp.GameMode.World;
 using System;
-using System.Security.Cryptography.X509Certificates;
+using SampSharp.GameMode.Controllers;
 
 namespace Mrucznik.Controllers
 {
