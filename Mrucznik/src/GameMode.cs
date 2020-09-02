@@ -124,6 +124,26 @@ namespace Mrucznik
 
             _objects.RemoveBuildingsForPlayer(player);
         }
+        
+        protected override void OnPlayerCommandText(BasePlayer player, CommandTextEventArgs e)
+        {
+            base.OnPlayerCommandText(player, e);
+
+            if (e.Success == false)
+            {
+                var commandManager = Services.GetService<ICommandsManager>();
+
+                Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(e.Text);
+                var similarCommands = commandManager.Commands
+                    .OrderBy(command => lev.DistanceFrom(command.ToString()))
+                    .Take(3);
+
+                player.SendClientMessage(
+                    $"Nie znaleziono komendy: {e.Text}. Podobne komendy: {String.Join(", ", similarCommands)}?");
+                e.Success = true;
+                return;
+            }
+        }
 
         #endregion
     }

@@ -2,6 +2,7 @@ using System;
 using SampSharp.GameMode;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
+using SampSharp.Streamer.Events;
 using SampSharp.Streamer.World;
 
 namespace Mrucznik
@@ -25,12 +26,19 @@ namespace Mrucznik
             if (Objects.Objects.ObjectModels.ContainsKey(modelid))
             {
                 var model = Objects.Objects.ObjectModels[modelid];
-                DynamicTextLabel = new DynamicTextLabel($"{model.Name}\nID: {this.Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+                DynamicTextLabel = new DynamicTextLabel($"{model.Name}\nID: {Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
             }
             else
             {
-                DynamicTextLabel = new DynamicTextLabel($"ID: {this.Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+                DynamicTextLabel = new DynamicTextLabel($"ID: {Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
             }
+        }
+
+        public override void OnSelected(PlayerSelectEventArgs e)
+        {
+            base.OnSelected(e);
+            
+            
         }
     }
 }
