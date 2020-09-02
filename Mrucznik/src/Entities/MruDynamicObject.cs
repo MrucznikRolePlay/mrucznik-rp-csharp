@@ -104,6 +104,7 @@ namespace Mrucznik
             {
                 Id = ApiId,
             });
+            Dispose();
         }
 
 
