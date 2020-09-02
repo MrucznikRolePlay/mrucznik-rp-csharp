@@ -1,12 +1,12 @@
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using Mrucznik.Systems;
+using Mrucznik.Objects;
+using SampSharp.Core.Natives;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer;
-using SampSharp.Streamer.Definitions;
 using SampSharp.Streamer.World;
 
 namespace Mrucznik.Commands
@@ -18,19 +18,23 @@ namespace Mrucznik.Commands
         {
             sender.SendClientMessage($"Streamer objects: {DynamicObject.All.Count().ToString()}");
         }
-        
+
         [Command("objectslist")]
-        private static void StreamerObjectsList(BasePlayer sender, int page=0)
+        private static void StreamerObjectsList(BasePlayer sender, int page = 0)
         {
-            var objects = DynamicObject.All.Skip(50*page).Take(50);
-            var tablistDialog = new TablistDialog($"Obiekty - strona {page.ToString()}", 
-                new []{"ID", "Model", "VW", "INT"}, 
+            var objects = DynamicObject.All.Skip(50 * page).Take(50);
+            var tablistDialog = new TablistDialog($"Obiekty - strona {page.ToString()}",
+                new[] {"ID", "Model", "Name", "X", "Y", "Z", "VW", "INT"},
                 "Teleport", "Następny");
             bool ok = false;
             foreach (var o in objects)
             {
                 ok = true;
-                tablistDialog.Add(o.Id.ToString(), o.ModelId.ToString(), o.World.ToString(), o.Interior.ToString());
+                tablistDialog.Add(o.Id.ToString(), o.ModelId.ToString(), o.ToString(), 
+                    o.Position.X.ToString(CultureInfo.CurrentCulture), 
+                    o.Position.Y.ToString(CultureInfo.CurrentCulture), 
+                    o.Position.Z.ToString(CultureInfo.CurrentCulture),
+                    o.World.ToString(), o.Interior.ToString());
             }
 
             if (!ok)
@@ -51,15 +55,15 @@ namespace Mrucznik.Commands
                     StreamerObjectsList(sender, page + 1);
                 }
             };
-            
+
             tablistDialog.Show(sender);
         }
-        
+
         [Command("gotoobject")]
         private static void GotoObject(BasePlayer sender, int objectId)
         {
             var o = SampSharp.Streamer.World.DynamicObject.Find(objectId);
-            if(o != null)
+            if (o != null)
             {
                 sender.SendClientMessage($"Zostałeś teleportowany do obiektu o ID {objectId}, pozycja: {o.Position}.");
             }
@@ -69,10 +73,43 @@ namespace Mrucznik.Commands
             }
         }
 
-        [Command("selectobject")]
-        private static void SelectObject(BasePlayer sender)
+        [Command("selectobject", Shortcut = "sel")]
+        private static void SelectObject(BasePlayer sender, int objectId = -1)
         {
-            GlobalObject.Select(sender);
+            if (objectId == -1)
+            {
+                ((Player) sender).ObjectEditorState = ObjectEditorState.Edit;
+                GlobalObject.Select(sender);
+            }
+            else
+            {
+                GlobalObject.Find(objectId).Edit(sender);
+            }
+        }
+
+        [Command("deleteobject", "odel", "odelete", "deleteo", Shortcut = "delo")]
+        private static void DeleteObject(BasePlayer sender, int objectId=-1)
+        {
+            if (objectId == -1)
+            {
+                ((Player) sender).ObjectEditorState = ObjectEditorState.Delete;
+                GlobalObject.Select(sender);
+            }
+            else
+            {
+                var o = DynamicObject.Find(objectId);
+                if (o != null && o.IsValid)
+                {
+                    sender.SendClientMessage($"Usunąłeś obiekt {o}");
+                    o.Dispose();
+                }
+            }
+        }
+
+        [Command("createobject", Shortcut = "cobject")]
+        private static void CreateObject(BasePlayer sender, int modelId=-1)
+        {
+            sender.SendClientMessage("Not implemented");
         }
     }
 }

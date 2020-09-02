@@ -3,14 +3,13 @@ using System.Linq;
 using Grpc.Core;
 using Mrucznik.Controllers;
 using Mruv.Server;
-using SampSharp.Core.Logging;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Controllers;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
-using SampSharp.Streamer;
+using Object = Mruv.Objects.Object;
 using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik
@@ -95,7 +94,7 @@ namespace Mrucznik
         protected override void OnExited(EventArgs e)
         {
             base.OnExited(e);
-
+            
             try
             {
                 MruV.Disconnect();

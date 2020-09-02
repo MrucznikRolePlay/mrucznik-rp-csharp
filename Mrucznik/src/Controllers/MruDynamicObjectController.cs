@@ -1,4 +1,3 @@
-using System;
 using SampSharp.Streamer.World;
 using SampSharp.Streamer.Controllers;
 

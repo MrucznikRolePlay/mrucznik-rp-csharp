@@ -2,7 +2,7 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using System;
-using static Mrucznik.Helpers.PlayerHelpers;
+
 namespace Mrucznik.Systems.BeforeGame
 {
     public class Tutorial

@@ -2,4 +2,5 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/home/mrucznik/.nuget/packages/sampsharp.gamemode/0.9.1/lib/netstandard2.0/SampSharp.GameMode.dll" /&gt;
   &lt;Assembly Path="/home/mrucznik/.nuget/packages/sampsharp.streamer/0.9.0/lib/netstandard2.0/SampSharp.Streamer.dll" /&gt;
+  &lt;Assembly Path="/home/mrucznik/.nuget/packages/sampsharp.core/0.9.3/lib/netstandard2.0/SampSharp.Core.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

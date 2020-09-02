@@ -3,7 +3,6 @@ using Mruv;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.World;
 
 namespace Mrucznik.Systems.BeforeGame
 {

@@ -1,6 +1,5 @@
 ﻿using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.Events;
-using System;
 
 namespace Mrucznik.Systems.AntiCheat
 {

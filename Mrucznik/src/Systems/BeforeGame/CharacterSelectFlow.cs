@@ -2,7 +2,6 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.World;
 using System;
 
 namespace Mrucznik.Systems.BeforeGame

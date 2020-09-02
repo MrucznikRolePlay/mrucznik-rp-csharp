@@ -3,21 +3,19 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Grpc.Core.Utils;
 using Mruv.Objects;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer.World;
-using Status = Google.Rpc.Status;
 
 namespace Mrucznik.Objects
 {
     public class Objects
     {
         public List<RemovedBuilding> RemovedBuildings { private set; get; }
-        public static readonly Dictionary<int, DynamicObject> ObjectsIDs = new Dictionary<int, DynamicObject>();
-        public static ConcurrentDictionary<int,ObjectModel> ObjectModels = new ConcurrentDictionary<int, ObjectModel>();
+        public static readonly Dictionary<int, MruDynamicObject> ObjectsIDs = new Dictionary<int, MruDynamicObject>();
+        public static ConcurrentDictionary<int, ObjectModel> ObjectModels = new ConcurrentDictionary<int, ObjectModel>();
     
         public Objects()
         {

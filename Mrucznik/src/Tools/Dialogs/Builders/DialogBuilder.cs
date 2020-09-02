@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 

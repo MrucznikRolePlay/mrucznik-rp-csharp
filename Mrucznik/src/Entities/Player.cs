@@ -1,4 +1,5 @@
 using System;
+using Mrucznik.Objects;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
 using Mrucznik.Systems.AntiCheat;
@@ -10,6 +11,7 @@ namespace Mrucznik
     {
         public Character PlayerCharacter;
         public bool LoggedIn;
+        public ObjectEditorState ObjectEditorState;
         
         private RealTime _realTime;
         private AntiSpawn _antiSpawn;

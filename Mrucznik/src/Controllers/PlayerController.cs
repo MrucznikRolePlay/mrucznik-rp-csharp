@@ -1,4 +1,3 @@
-using System;
 using SampSharp.GameMode.Controllers;
 
 namespace Mrucznik.Controllers
