@@ -16,14 +16,14 @@ namespace Mrucznik.Commands
         [Command("objects")]
         private static void StreamerObjects(BasePlayer sender)
         {
-            sender.SendClientMessage($"Streamer objects: {SampSharp.Streamer.World.DynamicObject.All.Count()}");
+            sender.SendClientMessage($"Streamer objects: {DynamicObject.All.Count().ToString()}");
         }
         
         [Command("objectslist")]
         private static void StreamerObjectsList(BasePlayer sender, int page=0)
         {
             var objects = DynamicObject.All.Skip(50*page).Take(50);
-            var tablistDialog = new TablistDialog($"Obiekty - strona {page}", 
+            var tablistDialog = new TablistDialog($"Obiekty - strona {page.ToString()}", 
                 new []{"ID", "Model", "VW", "INT"}, 
                 "Teleport", "Następny");
             bool ok = false;
