@@ -12,11 +12,43 @@ namespace Mrucznik.Commands
         {
             sender.SendClientMessage($"Twój wirtual world to: {sender.VirtualWorld}");
         }
+
+        [Command("setvw")]
+        private static void SetVirtualWorld(BasePlayer sender, int vw, BasePlayer giveplayer = null)
+        {
+            if(giveplayer == null)
+            {
+                sender.SendClientMessage($"Ustawiłeś swój virtual world na: {vw}");
+                sender.VirtualWorld = vw;
+            }
+            else
+            {
+                sender.SendClientMessage($"Ustawiłeś virtual world {giveplayer} na: {vw}");
+                giveplayer.SendClientMessage($"{sender} ustawił Twój virtual world na: {vw}");
+                giveplayer.VirtualWorld = vw;
+            }
+        }
         
         [Command("getint")]
         private static void GetInterior(BasePlayer sender)
         {
             sender.SendClientMessage($"Twój interior to: {sender.Interior}");
+        }
+
+        [Command("setint")]
+        private static void SetInterior(BasePlayer sender, int interior, BasePlayer giveplayer = null)
+        {
+            if(giveplayer == null)
+            {
+                sender.SendClientMessage($"Ustawiłeś swój interior na: {interior}");
+                sender.VirtualWorld = interior;
+            }
+            else
+            {
+                sender.SendClientMessage($"Ustawiłeś interior {giveplayer} na: {interior}");
+                giveplayer.SendClientMessage($"{sender} ustawił Twój interior na: {interior}");
+                giveplayer.VirtualWorld = interior;
+            }
         }
         
         [Command("testdialogflow")]
