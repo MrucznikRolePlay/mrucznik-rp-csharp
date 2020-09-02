@@ -33,15 +33,15 @@ namespace Mrucznik.Objects
             Console.Write("Loading removed buildings...");
             var request = new GetRemovedBuildingsRequest() { };
             var result = MruV.Objects.GetRemovedBuildings(request);
-            RemovedBuildings = new List<RemovedBuilding>(result.RemovedBuilding);
+            RemovedBuildings = new List<RemovedBuilding>(result.RemovedBuildings);
             Console.WriteLine("\nBuildings removed.");
         }
 
         private void LoadObjects()
         {
             Console.Write("Loading objects..");
-            var request = new FetchAllRequest {ChunkSize = 10000};
-            var call = MruV.Objects.FetchAll(request);
+            var request = new FetchAllObjectsRequest {ChunkSize = 10000};
+            var call = MruV.Objects.FetchAllObjects(request);
             {
                 while (true)
                 {
