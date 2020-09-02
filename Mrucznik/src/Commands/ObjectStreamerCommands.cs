@@ -68,5 +68,11 @@ namespace Mrucznik.Commands
                 sender.SendClientMessage($"Nie znaleziono obiektu o ID {objectId}.");
             }
         }
+
+        [Command("selectobject")]
+        private static void SelectObject(BasePlayer sender)
+        {
+            GlobalObject.Select(sender);
+        }
     }
 }
