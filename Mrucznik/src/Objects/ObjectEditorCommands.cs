@@ -110,9 +110,9 @@ namespace Mrucznik.Commands
             }
 
             [Command("multiselect", "msel")]
-            private static void MultiSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds)
+            private static void MultiSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds = null)
             {
-                if (objectIds.Count > 0)
+                if (objectIds?.Count > 0)
                 {
                     sender.SendClientMessage($"Wybrałeś obiekty: {String.Join(", ", objectIds)}");
                     return;

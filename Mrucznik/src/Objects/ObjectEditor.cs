@@ -16,7 +16,7 @@ namespace Mrucznik.Objects
     public class ObjectEditor
     {        
         private ObjectEditorState ObjectEditorState;
-        private List<MruDynamicObject> selectedObjects;
+        private List<MruDynamicObject> selectedObjects = new List<MruDynamicObject>();
 
         private readonly Player _player;
 
@@ -69,6 +69,7 @@ namespace Mrucznik.Objects
                 case ObjectEditorState.Edit:
                     _player.SendClientMessage($"Wybrałeś obiekt: {this}");
                     o.Edit(_player);
+                    o.DynamicTextLabel.Color = Color.GreenYellow;
                     break;
                 case ObjectEditorState.Delete:
                     _player.SendClientMessage($"Usunąłeś obiekt {this}");
@@ -112,6 +113,7 @@ namespace Mrucznik.Objects
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
                     o.DynamicTextLabel.Position = e.Position;
                     o.Position = e.Position;
+                    o.DynamicTextLabel.Color = Color.Chocolate;
                     ObjectEditorState = ObjectEditorState.None;
                     o.ApiSave();
                 }
@@ -121,6 +123,7 @@ namespace Mrucznik.Objects
                     o.DynamicTextLabel.Position = o.Position;
                     o.Position = o.Position;
                     ObjectEditorState = ObjectEditorState.None;
+                    o.DynamicTextLabel.Color = Color.Chocolate;
                 }
             }
         }

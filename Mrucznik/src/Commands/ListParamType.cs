@@ -10,6 +10,7 @@ namespace Mrucznik.Commands
         public bool Parse(ref string commandText, out object output, bool isNullable = false)
         {
             List<int> list = new List<int>();
+            output = list;
             var words = commandText.TrimStart().Split(' ');
             foreach (var word in words)
             {
@@ -18,9 +19,12 @@ namespace Mrucznik.Commands
                 {
                     list.Add(number);
                 }
+                else
+                {
+                    return false;
+                }
             }
 
-            output = list;
             return true;
         }
     }
