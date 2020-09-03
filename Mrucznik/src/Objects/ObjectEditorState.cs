@@ -5,6 +5,7 @@ namespace Mrucznik.Objects
         None,
         Edit,
         Delete,
-        Create
+        Create,
+        MultiSelect
     }
 }

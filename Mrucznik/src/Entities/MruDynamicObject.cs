@@ -16,17 +16,16 @@ namespace Mrucznik
         public uint ApiId;
         public uint EstateId;
         public DynamicTextLabel DynamicTextLabel;
-        public bool EditMode { private set; get; }
 
-        public MruDynamicObject(uint apiID, int modelid, Vector3 position, Vector3 rotation = new Vector3(), int worldid = -1, int interiorid = -1, BasePlayer player = null, float streamdistance = 200, float drawdistance = 0, DynamicArea area = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, worldid, interiorid, player, streamdistance, drawdistance, area, priority)
+        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation = new Vector3(), int worldid = -1, int interiorid = -1, BasePlayer player = null, float streamdistance = 200, float drawdistance = 0, DynamicArea area = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, worldid, interiorid, player, streamdistance, drawdistance, area, priority)
         {
-            ApiId = apiID;
+            ApiId = apiId;
             Object3DText(modelid, position);
         }
 
-        public MruDynamicObject(uint apiID, int modelid, Vector3 position, Vector3 rotation, float streamdistance, int[] worlds = null, int[] interiors = null, BasePlayer[] players = null, float drawdistance = 0, DynamicArea[] areas = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, streamdistance, worlds, interiors, players, drawdistance, areas, priority)
+        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation, float streamdistance, int[] worlds = null, int[] interiors = null, BasePlayer[] players = null, float drawdistance = 0, DynamicArea[] areas = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, streamdistance, worlds, interiors, players, drawdistance, areas, priority)
         {
-            ApiId = apiID;
+            ApiId = apiId;
             Object3DText(modelid, position);
         }
 
@@ -39,55 +38,23 @@ namespace Mrucznik
         {
             base.OnSelected(e);
 
-            switch (((Player)e.Player).ObjectEditorState)
-            {
-                case ObjectEditorState.Edit:
-                    e.Player.SendClientMessage($"Wybrałeś obiekt: {this}");
-                    Edit(e.Player);
-                    break;
-                case ObjectEditorState.Delete:
-                    e.Player.SendClientMessage($"Usunąłeś obiekt {this}");
-                    Delete();
-                    break;
-            }
+            ((Player)e.Player).ObjectEditor.OnSelected(this, e);
         }
         
         public override void OnEdited(PlayerEditEventArgs e)
         {
             base.OnEdited(e);
 
-            if (EditMode)
-            {
-                if (e.Response == EditObjectResponse.Update)
-                {
-                    e.Player.SendClientMessage($"Edytujesz obiekt: {this}");
-                    DynamicTextLabel.Position = e.Position;
-                }
-                else if (e.Response == EditObjectResponse.Final)
-                {
-                    e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
-                    DynamicTextLabel.Position = e.Position;
-                    Position = e.Position;
-                    EditMode = false;
-                    Save();
-                }
-                else if (e.Response == EditObjectResponse.Cancel)
-                {
-                    e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {this}");
-                    DynamicTextLabel.Position = Position;
-                    Position = Position;
-                    EditMode = false;
-                }
-            }
+            ((Player)e.Player).ObjectEditor.OnEdited(this, e);
         }
 
         public override void Edit(BasePlayer player)
         {
             base.Edit(player);
-            EditMode = true;
+            ((Player)Player).ObjectEditor.EditMode = true;
         }
 
-        private void Save()
+        public void ApiSave()
         {
             Console.WriteLine($"Saving object {ApiId}");
             MruV.Objects.UpdateObjectAsync(new UpdateObjectRequest()
@@ -97,7 +64,7 @@ namespace Mrucznik
             });
         }
 
-        private void Delete()
+        public void ApiDelete()
         {
             Console.WriteLine($"Deleting object {ApiId}");
             MruV.Objects.DeleteObjectAsync(new DeleteObjectRequest()
@@ -137,7 +104,6 @@ namespace Mrucznik
             base.Dispose(disposing);
             
             DynamicTextLabel.Dispose();
-            EditMode = false;
         }
     }
 }

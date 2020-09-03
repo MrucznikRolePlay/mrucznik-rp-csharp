@@ -11,7 +11,7 @@ namespace Mrucznik
     {
         public Character PlayerCharacter;
         public bool LoggedIn;
-        public ObjectEditorState ObjectEditorState;
+        public readonly ObjectEditor ObjectEditor;
         
         private RealTime _realTime;
         private AntiSpawn _antiSpawn;
@@ -23,6 +23,7 @@ namespace Mrucznik
             _realTime = new RealTime(this);
             //_antiSpawn = new AntiSpawn(this);
             _antiWeapon = new AntiWeapon(this);
+            ObjectEditor = new ObjectEditor(this);
         }
         public override void OnConnected(EventArgs e)
         {
