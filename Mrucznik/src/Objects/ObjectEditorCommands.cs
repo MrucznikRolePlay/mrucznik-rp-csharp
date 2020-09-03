@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using Mrucznik.Objects;
-using Mruv.Objects;
-using SampSharp.Core.Natives;
 using SampSharp.GameMode.Definitions;
-using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.SAMP.Commands.Parameters;
 using SampSharp.GameMode.World;
-using SampSharp.Streamer;
 using SampSharp.Streamer.World;
 
 namespace Mrucznik.Commands

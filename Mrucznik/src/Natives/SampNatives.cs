@@ -1,4 +1,3 @@
-using SampSharp.Core.Natives;
 using SampSharp.GameMode.World;
 
 namespace Mrucznik.Natives

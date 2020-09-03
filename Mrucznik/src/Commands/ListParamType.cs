@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using SampSharp.GameMode.SAMP.Commands.ParameterTypes;
 
 namespace Mrucznik.Commands

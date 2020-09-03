@@ -9,7 +9,6 @@ using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
-using Object = Mruv.Objects.Object;
 using Server = SampSharp.GameMode.SAMP.Server;
 
 namespace Mrucznik

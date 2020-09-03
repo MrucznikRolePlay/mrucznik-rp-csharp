@@ -7,7 +7,6 @@ using Mruv.Objects;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.World;
-using SampSharp.Streamer.World;
 
 namespace Mrucznik.Objects
 {
