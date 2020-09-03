@@ -1,4 +1,6 @@
 using Mrucznik.Systems;
+using Mruv;
+using SampSharp.GameMode;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
@@ -49,6 +51,33 @@ namespace Mrucznik.Commands
                 giveplayer.SendClientMessage($"{sender} ustawił Twój interior na: {interior}");
                 giveplayer.VirtualWorld = interior;
             }
+        }
+        
+        [Command("gotopos")]
+        private static void GotoPos(BasePlayer sender, double x, double y, double z)
+        {
+            sender.SendClientMessage($"Teleportowałeś się do pozycji: {x}, {y}, {z}");
+            sender.Position = new Vector3(x, y, z);
+        }
+        
+        [Command("gotopos")]
+        private static void GotoPos(BasePlayer sender, string pos)
+        {
+            double x = 0.0, y = 0.0, z = 0.0;
+            sender.SendClientMessage($"Teleportowałeś się do pozycji: {pos}");
+            var values = pos.Split(",");
+            if(values.Length > 0)
+            {
+                if (!double.TryParse(values[0], out x)
+                || !double.TryParse(values[1], out y) 
+                || !double.TryParse(values[2], out z))
+                {
+                    sender.SendClientMessage("Złe argumenty!");
+                    return;
+                }
+            }
+            sender.Position = new Vector3(x, y, z);
+            
         }
         
         [Command("testdialogflow")]
