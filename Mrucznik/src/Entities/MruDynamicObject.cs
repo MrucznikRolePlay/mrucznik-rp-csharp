@@ -21,6 +21,7 @@ namespace Mrucznik
             o.Player, o.StreamDistance, o.DrawDistance, o.Area, o.Priority)
         {
             ApiId = ApiCreate();
+            Object3DText(o.ModelId, o.Position);
         }
 
         public MruDynamicObject(int modelid, Vector3 position, Vector3 rotation = new Vector3(), int worldid = -1,
