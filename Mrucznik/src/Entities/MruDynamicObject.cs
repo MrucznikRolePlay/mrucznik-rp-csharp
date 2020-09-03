@@ -15,7 +15,7 @@ namespace Mrucznik
     {
         public uint ApiId;
         public uint EstateId;
-        public DynamicTextLabel DynamicTextLabel;
+        private DynamicTextLabel DynamicTextLabel;
 
         public MruDynamicObject(DynamicObject o) : base(o.ModelId, o.Position, o.Rotation, o.World, o.Interior,
             o.Player, o.StreamDistance, o.DrawDistance, o.Area, o.Priority)
@@ -150,6 +150,26 @@ namespace Mrucznik
         public override int GetHashCode()
         {
             return (int) ApiId;
+        }
+
+        public override Vector3 Position
+        {
+            get => base.Position;
+            set
+            {
+                DynamicTextLabel.Position = value;
+                base.Position = value;
+            }
+        }
+
+        public void Mark()
+        {
+            DynamicTextLabel.Color = Color.Chocolate;
+        }
+
+        public void UnMark()
+        {
+            DynamicTextLabel.Color = Color.GreenYellow;
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("select", "sel", "s")]
+            [Command("select", "sel", "s", "edit", "e")]
             private static void SelectObject(Player sender, int objectId = -1)
             {
                 if (objectId == -1)
@@ -85,7 +85,7 @@ namespace Mrucznik.Commands
                         return;
                     }
 
-                    sender.ObjectEditor.EditObjectMode(o);
+                    sender.ObjectEditor.EditObjectMode((MruDynamicObject)o);
                 }
             }
 
@@ -105,12 +105,25 @@ namespace Mrucznik.Commands
                         return;
                     }
 
-                    sender.ObjectEditor.EditObjectMode(o);
+                    sender.ObjectEditor.EditObjectMode((MruDynamicObject)o);
                 }
             }
 
             [Command("multiselect", "msel")]
             private static void MultiSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds = null)
+            {
+                if (objectIds?.Count > 0)
+                {
+                    sender.SendClientMessage($"Wybrałeś obiekty: {String.Join(", ", objectIds)}");
+                    return;
+                }
+                sender.SendClientMessage(
+                    "Wybierz obiekty, które chcesz edytować. Wpisz komendę /o cancel aby anulować wybór obiektów.");
+                sender.ObjectEditor.MultiSelectMode();
+            }
+            
+            [Command("cancel")]
+            private static void CancelSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds = null)
             {
                 if (objectIds?.Count > 0)
                 {

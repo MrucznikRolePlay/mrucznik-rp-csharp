@@ -16,7 +16,7 @@ namespace Mrucznik.Objects
     public class ObjectEditor
     {        
         private ObjectEditorState ObjectEditorState;
-        private List<MruDynamicObject> selectedObjects = new List<MruDynamicObject>();
+        private HashSet<MruDynamicObject> selectedObjects = new HashSet<MruDynamicObject>();
 
         private readonly Player _player;
 
@@ -48,20 +48,39 @@ namespace Mrucznik.Objects
             GlobalObject.Select(_player);
         }
 
-        public void CreateObjectMode(DynamicObject o)
+        public void CreateObjectMode(MruDynamicObject o)
         {
             ObjectEditorState = ObjectEditorState.Create;
             o.Edit(_player);
         }
 
-        public void EditObjectMode(DynamicObject o)
+        public void EditObjectMode(MruDynamicObject o)
         {
             ObjectEditorState = ObjectEditorState.Edit;
             o.Edit(_player);
         }
+
+        public void CancelSelection()
+        {
+            foreach (var o in selectedObjects)
+            {
+                UnSelectObject(o);
+            }
+        }
+
+        public void SelectObject(MruDynamicObject o)
+        {
+            selectedObjects.Add(o);
+            o.Mark();
+        }
+
+        public void UnSelectObject(MruDynamicObject o)
+        {
+            selectedObjects.Remove(o);
+            o.UnMark();
+        }
         
         #region Events
-
         public void OnSelected(MruDynamicObject o, PlayerSelectEventArgs e)
         {
             switch (ObjectEditorState)
@@ -69,15 +88,23 @@ namespace Mrucznik.Objects
                 case ObjectEditorState.Edit:
                     _player.SendClientMessage($"Wybrałeś obiekt: {this}");
                     o.Edit(_player);
-                    o.DynamicTextLabel.Color = Color.GreenYellow;
+                    o.Mark();
                     break;
                 case ObjectEditorState.Delete:
                     _player.SendClientMessage($"Usunąłeś obiekt {this}");
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        selectedObject.ApiDelete();
+                    }
                     o.ApiDelete();
                     ObjectEditorState = ObjectEditorState.None;
                     break;
                 case ObjectEditorState.Clone:
                     _player.SendClientMessage($"Sklonowałeś obiekt: {this}");
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        new MruDynamicObject(selectedObject);
+                    }
                     var clone = new MruDynamicObject(o);
                     clone.Edit(e.Player);
                     break;
@@ -85,14 +112,12 @@ namespace Mrucznik.Objects
                     if (selectedObjects.Contains(o))
                     {
                         _player.SendClientMessage($"Usunąłęś obiekt {this} z zaznaczeń");
-                        selectedObjects.Remove(o);
-                        o.DynamicTextLabel.Color = Color.Chocolate;
+                        UnSelectObject(o);
                     }
                     else
                     {
                         _player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
-                        selectedObjects.Add(o);
-                        o.DynamicTextLabel.Color = Color.GreenYellow;
+                        SelectObject(o);
                     }
                     MultiSelectMode();
                     break;
@@ -106,24 +131,37 @@ namespace Mrucznik.Objects
                 if (e.Response == EditObjectResponse.Update)
                 {
                     e.Player.SendClientMessage($"Edytujesz obiekt: {this}");
-                    o.DynamicTextLabel.Position = e.Position;
+
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        selectedObject.Position += o.Position - e.Position;
+                    }
                 }
                 else if (e.Response == EditObjectResponse.Final)
                 {
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
-                    o.DynamicTextLabel.Position = e.Position;
-                    o.Position = e.Position;
-                    o.DynamicTextLabel.Color = Color.Chocolate;
                     ObjectEditorState = ObjectEditorState.None;
+                    o.Position = e.Position;
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        selectedObject.Position += o.Position - e.Position;
+                        selectedObject.UnMark();
+                        selectedObject.ApiSave();
+                    }
+                    o.UnMark();
                     o.ApiSave();
                 }
                 else if (e.Response == EditObjectResponse.Cancel)
                 {
                     e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {this}");
-                    o.DynamicTextLabel.Position = o.Position;
-                    o.Position = o.Position;
                     ObjectEditorState = ObjectEditorState.None;
-                    o.DynamicTextLabel.Color = Color.Chocolate;
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        selectedObject.Position -= o.Position - e.Position;
+                        selectedObject.UnMark();
+                    }
+                    o.Position = o.Position;
+                    o.UnMark();
                 }
             }
         }
