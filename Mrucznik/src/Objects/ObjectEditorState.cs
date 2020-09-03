@@ -6,6 +6,7 @@ namespace Mrucznik.Objects
         Edit,
         Delete,
         Create,
+        Clone,
         MultiSelect
     }
 }

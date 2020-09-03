@@ -66,8 +66,7 @@ namespace Mrucznik.Commands
         {
             if (objectId == -1)
             {
-                sender.ObjectEditor.ObjectEditorState = ObjectEditorState.Edit;
-                GlobalObject.Select(sender);
+                sender.ObjectEditor.SelectObjectMode();
             }
             else
             {
@@ -77,9 +76,28 @@ namespace Mrucznik.Commands
                     sender.SendClientMessage($"Nie znaleziono obiektu o id {objectId}.");
                     return;
                 }
-
-                sender.ObjectEditor.ObjectEditorState = ObjectEditorState.Edit;
-                o.Edit(sender);
+                
+                sender.ObjectEditor.EditObjectMode(o);
+            }
+        }
+        
+        [Command("cloneobject", Shortcut = "cloneo")]
+        private static void CloneObject(Player sender, int objectId = -1)
+        {
+            if (objectId == -1)
+            {
+                sender.ObjectEditor.CloneObjectMode();
+            }
+            else
+            {
+                var o = DynamicObject.Find(objectId);
+                if (o == null || !o.IsValid)
+                {
+                    sender.SendClientMessage($"Nie znaleziono obiektu o id {objectId}.");
+                    return;
+                }
+                
+                sender.ObjectEditor.EditObjectMode(o);
             }
         }
 
@@ -102,8 +120,7 @@ namespace Mrucznik.Commands
             {
                 sender.SendClientMessage(
                     "Wybierz obiekty, które chcesz edytować, lub wpisz komendę /msel jeszcze raz aby anulować.");
-                sender.ObjectEditor.ObjectEditorState = ObjectEditorState.MultiSelect;
-                GlobalObject.Select(sender);
+                sender.ObjectEditor.MultiSelectMode();
             }
         }
 
@@ -112,8 +129,7 @@ namespace Mrucznik.Commands
         {
             if (objectId == -1)
             {
-                sender.ObjectEditor.ObjectEditorState = ObjectEditorState.Delete;
-                GlobalObject.Select(sender);
+                sender.ObjectEditor.DeleteObjectMode();
             }
             else
             {
@@ -134,12 +150,12 @@ namespace Mrucznik.Commands
         {
             if (modelId != -1)
             {
+                
             }
             else // Select model from dialog
             {
                 sender.ObjectEditor.GetModelListDialog(0, "Stwórz", (o, args) =>
                 {
-                    
                 });
             }
         }

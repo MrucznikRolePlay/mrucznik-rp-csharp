@@ -17,13 +17,34 @@ namespace Mrucznik
         public uint EstateId;
         public DynamicTextLabel DynamicTextLabel;
 
-        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation = new Vector3(), int worldid = -1, int interiorid = -1, BasePlayer player = null, float streamdistance = 200, float drawdistance = 0, DynamicArea area = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, worldid, interiorid, player, streamdistance, drawdistance, area, priority)
+        public MruDynamicObject(DynamicObject o) : base(o.ModelId, o.Position, o.Rotation, o.World, o.Interior,
+            o.Player, o.StreamDistance, o.DrawDistance, o.Area, o.Priority)
+        {
+            ApiId = ApiCreate();
+        }
+
+        public MruDynamicObject(int modelid, Vector3 position, Vector3 rotation = new Vector3(), int worldid = -1,
+            int interiorid = -1, BasePlayer player = null, float streamdistance = 200, float drawdistance = 0,
+            DynamicArea area = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, worldid,
+            interiorid, player, streamdistance, drawdistance, area, priority)
+        {
+            ApiId = ApiCreate();
+            Object3DText(modelid, position);
+        }
+
+        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation = new Vector3(),
+            int worldid = -1, int interiorid = -1, BasePlayer player = null, float streamdistance = 200,
+            float drawdistance = 0, DynamicArea area = null, int priority = 0, uint estateId = 0) : base(modelid,
+            position, rotation, worldid, interiorid, player, streamdistance, drawdistance, area, priority)
         {
             ApiId = apiId;
             Object3DText(modelid, position);
         }
 
-        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation, float streamdistance, int[] worlds = null, int[] interiors = null, BasePlayer[] players = null, float drawdistance = 0, DynamicArea[] areas = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation, streamdistance, worlds, interiors, players, drawdistance, areas, priority)
+        public MruDynamicObject(uint apiId, int modelid, Vector3 position, Vector3 rotation, float streamdistance,
+            int[] worlds = null, int[] interiors = null, BasePlayer[] players = null, float drawdistance = 0,
+            DynamicArea[] areas = null, int priority = 0, uint estateId = 0) : base(modelid, position, rotation,
+            streamdistance, worlds, interiors, players, drawdistance, areas, priority)
         {
             ApiId = apiId;
             Object3DText(modelid, position);
@@ -31,30 +52,25 @@ namespace Mrucznik
 
         private void Object3DText(int modelid, Vector3 position)
         {
-            DynamicTextLabel = new DynamicTextLabel($"{this}\nAPI ID: {ApiId} | ID: {Id} | Model: {modelid}", Color.Chocolate, position, 25.0f);
+            DynamicTextLabel = new DynamicTextLabel($"{this}\nAPI ID: {ApiId} | ID: {Id} | Model: {modelid}",
+                Color.Chocolate, position, 25.0f);
         }
 
         public override void OnSelected(PlayerSelectEventArgs e)
         {
             base.OnSelected(e);
 
-            ((Player)e.Player).ObjectEditor.OnSelected(this, e);
+            ((Player) e.Player).ObjectEditor.OnSelected(this, e);
         }
-        
+
         public override void OnEdited(PlayerEditEventArgs e)
         {
             base.OnEdited(e);
 
-            ((Player)e.Player).ObjectEditor.OnEdited(this, e);
+            ((Player) e.Player).ObjectEditor.OnEdited(this, e);
         }
 
-        public override void Edit(BasePlayer player)
-        {
-            base.Edit(player);
-            ((Player)Player).ObjectEditor.EditMode = true;
-        }
-
-        public void ApiSave()
+        internal void ApiSave()
         {
             Console.WriteLine($"Saving object {ApiId}");
             MruV.Objects.UpdateObjectAsync(new UpdateObjectRequest()
@@ -64,7 +80,7 @@ namespace Mrucznik
             });
         }
 
-        public void ApiDelete()
+        internal void ApiDelete()
         {
             Console.WriteLine($"Deleting object {ApiId}");
             MruV.Objects.DeleteObjectAsync(new DeleteObjectRequest()
@@ -74,6 +90,17 @@ namespace Mrucznik
             Dispose();
         }
 
+        internal uint ApiCreate()
+        {
+            var response = MruV.Objects.CreateObject(new CreateObjectRequest()
+            {
+                Object = this
+            });
+            ApiId = response.Id;
+            Objects.Objects.ObjectsIDs[(int) ApiId] = this;
+            Console.WriteLine($"Created object with id {ApiId}");
+            return ApiId;
+        }
 
         public static implicit operator Object(MruDynamicObject o) => new Object()
         {
@@ -102,7 +129,7 @@ namespace Mrucznik
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            
+
             DynamicTextLabel.Dispose();
         }
     }

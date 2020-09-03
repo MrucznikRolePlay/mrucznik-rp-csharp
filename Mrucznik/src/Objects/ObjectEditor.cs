@@ -1,18 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Google.Type;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
+using SampSharp.GameMode.World;
 using SampSharp.Streamer.Events;
 using SampSharp.Streamer.World;
+using Color = SampSharp.GameMode.SAMP.Color;
 
 namespace Mrucznik.Objects
 {
     public class ObjectEditor
     {        
-        public ObjectEditorState ObjectEditorState;
-        public bool EditMode { set; get; }
+        private ObjectEditorState ObjectEditorState;
+        private List<MruDynamicObject> selectedObjects;
 
         private readonly Player _player;
 
@@ -21,21 +25,46 @@ namespace Mrucznik.Objects
             _player = player;
         }
 
-        public void SelectObject()
+        public void SelectObjectMode()
         {
-            
+            ObjectEditorState = ObjectEditorState.Edit;
+            GlobalObject.Select(_player);
+        }
+        public void CloneObjectMode()
+        {
+            ObjectEditorState = ObjectEditorState.Clone;
+            GlobalObject.Select(_player);
         }
         
-        public void AddMultiSelect()
+        public void MultiSelectMode()
         {
-            
+            ObjectEditorState = ObjectEditorState.MultiSelect;
+            GlobalObject.Select(_player);
+        }
+
+        public void DeleteObjectMode()
+        {
+            ObjectEditorState = ObjectEditorState.Delete;
+            GlobalObject.Select(_player);
+        }
+
+        public void CreateObjectMode(DynamicObject o)
+        {
+            ObjectEditorState = ObjectEditorState.Create;
+            o.Edit(_player);
+        }
+
+        public void EditObjectMode(DynamicObject o)
+        {
+            ObjectEditorState = ObjectEditorState.Edit;
+            o.Edit(_player);
         }
         
         #region Events
 
         public void OnSelected(MruDynamicObject o, PlayerSelectEventArgs e)
         {
-            switch (((Player)e.Player).ObjectEditor.ObjectEditorState)
+            switch (ObjectEditorState)
             {
                 case ObjectEditorState.Edit:
                     e.Player.SendClientMessage($"Wybrałeś obiekt: {this}");
@@ -45,12 +74,22 @@ namespace Mrucznik.Objects
                     e.Player.SendClientMessage($"Usunąłeś obiekt {this}");
                     o.ApiDelete();
                     break;
+                case ObjectEditorState.Clone:
+                    e.Player.SendClientMessage($"Sklonowałeś obiekt: {this}");
+                    var clone = new MruDynamicObject(o);
+                    clone.Edit(e.Player);
+                    break;
+                case ObjectEditorState.MultiSelect:
+                    e.Player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
+                    o.DynamicTextLabel.Color = Color.GreenYellow;
+                    selectedObjects.Add(o);
+                    break;
             }
         }
 
         public void OnEdited(MruDynamicObject o, PlayerEditEventArgs e)
         {
-            if (EditMode)
+            if (ObjectEditorState == ObjectEditorState.Edit)
             {
                 if (e.Response == EditObjectResponse.Update)
                 {
@@ -62,7 +101,7 @@ namespace Mrucznik.Objects
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
                     o.DynamicTextLabel.Position = e.Position;
                     o.Position = e.Position;
-                    EditMode = false;
+                    ObjectEditorState = ObjectEditorState.None;
                     o.ApiSave();
                 }
                 else if (e.Response == EditObjectResponse.Cancel)
@@ -70,7 +109,7 @@ namespace Mrucznik.Objects
                     e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {this}");
                     o.DynamicTextLabel.Position = o.Position;
                     o.Position = o.Position;
-                    EditMode = false;
+                    ObjectEditorState = ObjectEditorState.None;
                 }
             }
         }
