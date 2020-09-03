@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Mrucznik.Objects;
 using Mruv.Objects;
 using SampSharp.Core.Natives;
@@ -8,6 +10,7 @@ using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
+using SampSharp.GameMode.SAMP.Commands.Parameters;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer;
 using SampSharp.Streamer.World;
@@ -107,8 +110,13 @@ namespace Mrucznik.Commands
             }
 
             [Command("multiselect", "msel")]
-            private static void MultiSelect(Player sender)
+            private static void MultiSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds)
             {
+                if (objectIds.Count > 0)
+                {
+                    sender.SendClientMessage($"Wybrałeś obiekty: {String.Join(", ", objectIds)}");
+                    return;
+                }
                 sender.SendClientMessage(
                     "Wybierz obiekty, które chcesz edytować, lub wpisz komendę /msel jeszcze raz aby anulować.");
                 sender.ObjectEditor.MultiSelectMode();
@@ -154,6 +162,22 @@ namespace Mrucznik.Commands
                 {
                     sender.SendClientMessage("Index textury powinien zawierać się w przedziale od 0 do 15.");
                     return;
+                }
+            }
+
+            [CommandGroup("group", "g")]
+            class ObjectGroupCommands
+            {
+                [Command("delete", "d")]
+                private static void DeleteGroup(Player sender)
+                {
+                    sender.SendClientMessage("Usunąłeś grupę obiektów.");
+                }
+                
+                [Command("edit", "e")]
+                private static void EditGroup(Player sender)
+                {
+                    sender.SendClientMessage("Edytujesz grupę obiektów.");
                 }
             }
 

@@ -81,9 +81,18 @@ namespace Mrucznik.Objects
                     clone.Edit(e.Player);
                     break;
                 case ObjectEditorState.MultiSelect:
-                    _player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
-                    o.DynamicTextLabel.Color = Color.GreenYellow;
-                    selectedObjects.Add(o);
+                    if (selectedObjects.Contains(o))
+                    {
+                        _player.SendClientMessage($"Usunąłęś obiekt {this} z zaznaczeń");
+                        selectedObjects.Remove(o);
+                        o.DynamicTextLabel.Color = Color.Chocolate;
+                    }
+                    else
+                    {
+                        _player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
+                        selectedObjects.Add(o);
+                        o.DynamicTextLabel.Color = Color.GreenYellow;
+                    }
                     MultiSelectMode();
                     break;
             }
