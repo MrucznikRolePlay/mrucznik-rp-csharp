@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Google.Type;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
@@ -10,7 +9,6 @@ using SampSharp.GameMode.Events;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer.Events;
 using SampSharp.Streamer.World;
-using Color = SampSharp.GameMode.SAMP.Color;
 
 namespace Mrucznik.Objects
 {
