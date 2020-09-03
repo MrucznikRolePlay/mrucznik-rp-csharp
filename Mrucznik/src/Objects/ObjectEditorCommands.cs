@@ -25,7 +25,7 @@ namespace Mrucznik.Commands
                 sender.SendClientMessage($"Streamer objects: {DynamicObject.All.Count().ToString()}");
             }
 
-            [Command("list", Shortcut = "l")]
+            [Command("list", "l")]
             private static void StreamerObjectsList(Player sender, int page = 0)
             {
                 var (tablistDialog, ok) = sender.ObjectEditor.GetObjectListDialog(page, "Teleport", (o, args) =>
@@ -50,7 +50,7 @@ namespace Mrucznik.Commands
                 tablistDialog.Show(sender);
             }
 
-            [Command("goto", Shortcut = "tp")]
+            [Command("goto", "tp")]
             private static void GotoObject(BasePlayer sender, int objectId)
             {
                 var o = DynamicObject.Find(objectId);
@@ -66,7 +66,7 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("select", "sel", Shortcut = "s")]
+            [Command("select", "sel", "s")]
             private static void SelectObject(Player sender, int objectId = -1)
             {
                 if (objectId == -1)
@@ -106,7 +106,7 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("multiselect", Shortcut = "msel")]
+            [Command("multiselect", "msel")]
             private static void MultiSelect(Player sender)
             {
                 sender.SendClientMessage(
@@ -114,7 +114,7 @@ namespace Mrucznik.Commands
                 sender.ObjectEditor.MultiSelectMode();
             }
 
-            [Command("delete", Shortcut = "del")]
+            [Command("delete", "del")]
             private static void DeleteObject(Player sender, int objectId = -1)
             {
                 if (objectId == -1)
@@ -135,7 +135,7 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("create", Shortcut = "c")]
+            [Command("create", "c")]
             private static void CreateObject(Player sender, int modelId = -1)
             {
                 if (modelId != -1)
@@ -147,7 +147,7 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("texture", Shortcut = "t")]
+            [Command("texture", "t")]
             private static void EditTexture(BasePlayer sender, int objectId, int textureIndex = 0)
             {
                 if (textureIndex < 0 || textureIndex > 15)
