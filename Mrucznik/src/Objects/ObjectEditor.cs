@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Google.Type;
+using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
@@ -17,6 +18,7 @@ namespace Mrucznik.Objects
     {        
         private ObjectEditorState ObjectEditorState;
         private HashSet<MruDynamicObject> selectedObjects = new HashSet<MruDynamicObject>();
+        private Dictionary<MruDynamicObject, Vector3> selectedObjectsPositions = new Dictionary<MruDynamicObject, Vector3>();
 
         private readonly Player _player;
 
@@ -64,8 +66,9 @@ namespace Mrucznik.Objects
         {
             foreach (var o in selectedObjects)
             {
-                UnSelectObject(o);
+                o.UnMark();
             }
+            selectedObjects.Clear();
         }
 
         public void SelectObject(MruDynamicObject o)
@@ -83,10 +86,19 @@ namespace Mrucznik.Objects
         #region Events
         public void OnSelected(MruDynamicObject o, PlayerSelectEventArgs e)
         {
+            if (selectedObjects.Contains(o))
+            {
+                selectedObjects.Remove(o);
+            }
+            
             switch (ObjectEditorState)
             {
                 case ObjectEditorState.Edit:
                     _player.SendClientMessage($"Wybrałeś obiekt: {this}");
+                    foreach (var selectedObject in selectedObjects)
+                    {
+                        selectedObjectsPositions[selectedObject] = selectedObject.Position;
+                    }
                     o.Edit(_player);
                     o.Mark();
                     break;
@@ -96,6 +108,7 @@ namespace Mrucznik.Objects
                     {
                         selectedObject.ApiDelete();
                     }
+                    selectedObjects.Clear();
                     o.ApiDelete();
                     ObjectEditorState = ObjectEditorState.None;
                     break;
@@ -103,10 +116,14 @@ namespace Mrucznik.Objects
                     _player.SendClientMessage($"Sklonowałeś obiekt: {this}");
                     foreach (var selectedObject in selectedObjects)
                     {
-                        new MruDynamicObject(selectedObject);
+                        var c = new MruDynamicObject(selectedObject);
+                        UnSelectObject(selectedObject);
+                        selectedObjectsPositions[c] = c.Position;
+                        SelectObject(c);
                     }
                     var clone = new MruDynamicObject(o);
                     clone.Edit(e.Player);
+                    ObjectEditorState = ObjectEditorState.Edit;
                     break;
                 case ObjectEditorState.MultiSelect:
                     if (selectedObjects.Contains(o))
@@ -134,35 +151,35 @@ namespace Mrucznik.Objects
 
                     foreach (var selectedObject in selectedObjects)
                     {
-                        selectedObject.Position += o.Position - e.Position;
+                        selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                     }
+                    return;
                 }
-                else if (e.Response == EditObjectResponse.Final)
+                
+                if (e.Response == EditObjectResponse.Final)
                 {
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
-                    ObjectEditorState = ObjectEditorState.None;
-                    o.Position = e.Position;
                     foreach (var selectedObject in selectedObjects)
                     {
-                        selectedObject.Position += o.Position - e.Position;
-                        selectedObject.UnMark();
+                        selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                         selectedObject.ApiSave();
                     }
-                    o.UnMark();
+                    o.Position = e.Position;
                     o.ApiSave();
                 }
                 else if (e.Response == EditObjectResponse.Cancel)
                 {
                     e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {this}");
-                    ObjectEditorState = ObjectEditorState.None;
                     foreach (var selectedObject in selectedObjects)
                     {
-                        selectedObject.Position -= o.Position - e.Position;
-                        selectedObject.UnMark();
+                        selectedObject.Position = selectedObjectsPositions[selectedObject];
                     }
                     o.Position = o.Position;
                     o.UnMark();
                 }
+                ObjectEditorState = ObjectEditorState.None;
+                selectedObjectsPositions.Clear();
+                o.UnMark();
             }
         }
         #endregion

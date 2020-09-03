@@ -125,17 +125,11 @@ namespace Mrucznik.Commands
             [Command("cancel")]
             private static void CancelSelect(Player sender, [Parameter(typeof(ListParamType))]List<int> objectIds = null)
             {
-                if (objectIds?.Count > 0)
-                {
-                    sender.SendClientMessage($"Wybrałeś obiekty: {String.Join(", ", objectIds)}");
-                    return;
-                }
-                sender.SendClientMessage(
-                    "Wybierz obiekty, które chcesz edytować, lub wpisz komendę /msel jeszcze raz aby anulować.");
-                sender.ObjectEditor.MultiSelectMode();
+                sender.SendClientMessage("Anulowałeś zaznaczenie wszystkich wybranych obiekty.");
+                sender.ObjectEditor.CancelSelection();
             }
 
-            [Command("delete", "del")]
+            [Command("delete", "del", "d")]
             private static void DeleteObject(Player sender, int objectId = -1)
             {
                 if (objectId == -1)
@@ -144,7 +138,7 @@ namespace Mrucznik.Commands
                 }
                 else
                 {
-                    var o = DynamicObject.Find(objectId);
+                    var o = (MruDynamicObject)DynamicObject.Find(objectId);
                     if (o == null || !o.IsValid)
                     {
                         sender.SendClientMessage($"Nie znaleziono obiektu o id {objectId}.");
@@ -152,7 +146,7 @@ namespace Mrucznik.Commands
                     }
 
                     sender.SendClientMessage($"Usunąłeś obiekt {o}");
-                    o.Dispose();
+                    o.ApiDelete();
                 }
             }
 

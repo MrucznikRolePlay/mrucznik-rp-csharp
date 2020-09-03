@@ -129,9 +129,9 @@ namespace Mrucznik
 
         protected override void Dispose(bool disposing)
         {
+            DynamicTextLabel?.Dispose();
+            
             base.Dispose(disposing);
-
-            DynamicTextLabel.Dispose();
         }
 
         protected bool Equals(MruDynamicObject other)
@@ -164,12 +164,12 @@ namespace Mrucznik
 
         public void Mark()
         {
-            DynamicTextLabel.Color = Color.Chocolate;
+            DynamicTextLabel.Color = Color.GreenYellow;
         }
 
         public void UnMark()
         {
-            DynamicTextLabel.Color = Color.GreenYellow;
+            DynamicTextLabel.Color = Color.Chocolate;
         }
     }
 }
