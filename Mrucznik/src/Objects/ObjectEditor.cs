@@ -67,22 +67,24 @@ namespace Mrucznik.Objects
             switch (ObjectEditorState)
             {
                 case ObjectEditorState.Edit:
-                    e.Player.SendClientMessage($"Wybrałeś obiekt: {this}");
-                    o.Edit(e.Player);
+                    _player.SendClientMessage($"Wybrałeś obiekt: {this}");
+                    o.Edit(_player);
                     break;
                 case ObjectEditorState.Delete:
-                    e.Player.SendClientMessage($"Usunąłeś obiekt {this}");
+                    _player.SendClientMessage($"Usunąłeś obiekt {this}");
                     o.ApiDelete();
+                    ObjectEditorState = ObjectEditorState.None;
                     break;
                 case ObjectEditorState.Clone:
-                    e.Player.SendClientMessage($"Sklonowałeś obiekt: {this}");
+                    _player.SendClientMessage($"Sklonowałeś obiekt: {this}");
                     var clone = new MruDynamicObject(o);
                     clone.Edit(e.Player);
                     break;
                 case ObjectEditorState.MultiSelect:
-                    e.Player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
+                    _player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
                     o.DynamicTextLabel.Color = Color.GreenYellow;
                     selectedObjects.Add(o);
+                    MultiSelectMode();
                     break;
             }
         }

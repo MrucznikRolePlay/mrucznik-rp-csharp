@@ -36,7 +36,7 @@ namespace Mrucznik
                 .Use<GameMode>()
                 .UseLogLevel(CoreLogLevel.Debug)
                 //.UseTcpClient("54.37.136.94", 8888)
-                .UseStartBehaviour(GameModeStartBehaviour.FakeGmx)
+                //.UseStartBehaviour(GameModeStartBehaviour.FakeGmx)
                 .Run();
         }
     }
