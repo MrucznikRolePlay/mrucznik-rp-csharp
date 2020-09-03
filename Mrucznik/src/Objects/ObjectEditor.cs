@@ -110,20 +110,22 @@ namespace Mrucznik.Objects
                     }
                     selectedObjects.Clear();
                     o.ApiDelete();
-                    ObjectEditorState = ObjectEditorState.None;
+                    ObjectEditorState = ObjectEditorState.Delete;
                     break;
                 case ObjectEditorState.Clone:
                     _player.SendClientMessage($"Sklonowałeś obiekt: {this}");
-                    foreach (var selectedObject in selectedObjects)
+                    var oldSelected = selectedObjects;
+                    selectedObjects = new HashSet<MruDynamicObject>();
+                    foreach (var selectedObject in oldSelected)
                     {
+                        selectedObject.UnMark();
                         var c = new MruDynamicObject(selectedObject);
-                        UnSelectObject(selectedObject);
                         selectedObjectsPositions[c] = c.Position;
                         SelectObject(c);
                     }
                     var clone = new MruDynamicObject(o);
-                    clone.Edit(e.Player);
                     ObjectEditorState = ObjectEditorState.Edit;
+                    clone.Edit(e.Player);
                     break;
                 case ObjectEditorState.MultiSelect:
                     if (selectedObjects.Contains(o))
