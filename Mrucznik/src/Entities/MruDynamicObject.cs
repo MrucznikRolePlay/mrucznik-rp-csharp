@@ -12,9 +12,10 @@ namespace Mrucznik
 {
     public class MruDynamicObject : DynamicObject
     {
-        public uint ApiId;
+        public uint ApiId { get; private set; }
         public uint EstateId;
-        private DynamicTextLabel DynamicTextLabel;
+        
+        private DynamicTextLabel _dynamicTextLabel;
 
         public MruDynamicObject(DynamicObject o) : base(o.ModelId, o.Position, o.Rotation, o.World, o.Interior,
             o.Player, o.StreamDistance, o.DrawDistance, o.Area, o.Priority)
@@ -52,7 +53,7 @@ namespace Mrucznik
 
         private void Object3DText(int modelid, Vector3 position)
         {
-            DynamicTextLabel = new DynamicTextLabel($"{this}\nAPI ID: {ApiId} | ID: {Id} | Model: {modelid}",
+            _dynamicTextLabel = new DynamicTextLabel($"{this}\nAPI ID: {ApiId} | ID: {Id} | Model: {modelid}",
                 Color.Chocolate, position, 25.0f);
         }
 
@@ -69,11 +70,11 @@ namespace Mrucznik
 
             if (e.Response == EditObjectResponse.Cancel)
             {
-                DynamicTextLabel.Position = Position;
+                _dynamicTextLabel.Position = Position;
             }
             else
             {
-                DynamicTextLabel.Position = e.Position;
+                _dynamicTextLabel.Position = e.Position;
             }
             ((Player) e.Player).ObjectEditor.OnEdited(this, e);
         }
@@ -136,7 +137,7 @@ namespace Mrucznik
 
         protected override void Dispose(bool disposing)
         {
-            DynamicTextLabel?.Dispose();
+            _dynamicTextLabel?.Dispose();
             
             base.Dispose(disposing);
         }
@@ -164,19 +165,19 @@ namespace Mrucznik
             get => base.Position;
             set
             {
-                DynamicTextLabel.Position = value;
+                _dynamicTextLabel.Position = value;
                 base.Position = value;
             }
         }
 
         public void Mark()
         {
-            DynamicTextLabel.Color = Color.GreenYellow;
+            _dynamicTextLabel.Color = Color.GreenYellow;
         }
 
         public void UnMark()
         {
-            DynamicTextLabel.Color = Color.Chocolate;
+            _dynamicTextLabel.Color = Color.Chocolate;
         }
     }
 }

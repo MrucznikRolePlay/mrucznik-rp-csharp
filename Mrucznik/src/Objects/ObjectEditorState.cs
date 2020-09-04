@@ -7,6 +7,8 @@ namespace Mrucznik.Objects
         Delete,
         Create,
         Clone,
-        MultiSelect
+        MultiSelect,
+        CreateGate,
+        CreateGate2NdState
     }
 }

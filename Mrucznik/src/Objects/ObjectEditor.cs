@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Mrucznik.Systems;
+using Mruv.Gates;
+using Mruv.Objects;
+using Mruv.Spots;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
@@ -15,10 +17,9 @@ namespace Mrucznik.Objects
 {
     public class ObjectEditor
     {
-        private ObjectEditorState ObjectEditorState;
-        private HashSet<MruDynamicObject> selectedObjects = new HashSet<MruDynamicObject>();
-
-        private Dictionary<MruDynamicObject, Vector3> selectedObjectsPositions =
+        private ObjectEditorState _objectEditorState;
+        private HashSet<MruDynamicObject> _selectedObjects = new HashSet<MruDynamicObject>();
+        private readonly Dictionary<MruDynamicObject, Vector3> _selectedObjectsPositions =
             new Dictionary<MruDynamicObject, Vector3>();
 
         private readonly Player _player;
@@ -30,59 +31,65 @@ namespace Mrucznik.Objects
 
         public void SelectObjectMode()
         {
-            ObjectEditorState = ObjectEditorState.Edit;
+            _objectEditorState = ObjectEditorState.Edit;
             GlobalObject.Select(_player);
         }
 
         public void CloneObjectMode()
         {
-            ObjectEditorState = ObjectEditorState.Clone;
+            _objectEditorState = ObjectEditorState.Clone;
             GlobalObject.Select(_player);
         }
 
         public void MultiSelectMode()
         {
-            ObjectEditorState = ObjectEditorState.MultiSelect;
+            _objectEditorState = ObjectEditorState.MultiSelect;
             GlobalObject.Select(_player);
         }
 
         public void DeleteObjectMode()
         {
-            ObjectEditorState = ObjectEditorState.Delete;
+            _objectEditorState = ObjectEditorState.Delete;
             GlobalObject.Select(_player);
         }
 
         public void CreateObjectMode(MruDynamicObject o)
         {
-            ObjectEditorState = ObjectEditorState.Create;
+            _objectEditorState = ObjectEditorState.Create;
             o.Edit(_player);
         }
 
         public void EditObjectMode(MruDynamicObject o)
         {
-            ObjectEditorState = ObjectEditorState.Edit;
+            _objectEditorState = ObjectEditorState.Edit;
+            o.Edit(_player);
+        }
+
+        public void CreateGateMode(MruDynamicObject o)
+        {
+            _objectEditorState = ObjectEditorState.CreateGate;
             o.Edit(_player);
         }
 
         public void CancelSelection()
         {
-            foreach (var o in selectedObjects)
+            foreach (var o in _selectedObjects)
             {
                 o.UnMark();
             }
 
-            selectedObjects.Clear();
+            _selectedObjects.Clear();
         }
 
         public void SelectObject(MruDynamicObject o)
         {
-            selectedObjects.Add(o);
+            _selectedObjects.Add(o);
             o.Mark();
         }
 
         public void UnSelectObject(MruDynamicObject o)
         {
-            selectedObjects.Remove(o);
+            _selectedObjects.Remove(o);
             o.UnMark();
         }
 
@@ -90,18 +97,18 @@ namespace Mrucznik.Objects
 
         public void OnSelected(MruDynamicObject o, PlayerSelectEventArgs e)
         {
-            if (ObjectEditorState != ObjectEditorState.MultiSelect && selectedObjects.Contains(o))
+            if (_objectEditorState != ObjectEditorState.MultiSelect && _selectedObjects.Contains(o))
             {
-                selectedObjects.Remove(o);
+                _selectedObjects.Remove(o);
             }
 
-            switch (ObjectEditorState)
+            switch (_objectEditorState)
             {
                 case ObjectEditorState.Edit:
                     _player.SendClientMessage($"Wybrałeś obiekt: {o}");
-                    foreach (var selectedObject in selectedObjects)
+                    foreach (var selectedObject in _selectedObjects)
                     {
-                        selectedObjectsPositions[selectedObject] = selectedObject.Position;
+                        _selectedObjectsPositions[selectedObject] = selectedObject.Position;
                     }
                     
                     o.Edit(_player);
@@ -109,35 +116,35 @@ namespace Mrucznik.Objects
                     break;
                 case ObjectEditorState.Delete:
                     _player.SendClientMessage($"Usunąłeś obiekt {o}");
-                    foreach (var selectedObject in selectedObjects)
+                    foreach (var selectedObject in _selectedObjects)
                     {
                         selectedObject.ApiDelete();
                     }
 
-                    selectedObjects.Clear();
+                    _selectedObjects.Clear();
                     o.ApiDelete();
-                    ObjectEditorState = ObjectEditorState.Delete;
+                    _objectEditorState = ObjectEditorState.Delete;
                     break;
                 case ObjectEditorState.Clone:
                     _player.SendClientMessage($"Sklonowałeś obiekt: {o}");
-                    var oldSelected = selectedObjects;
-                    selectedObjects = new HashSet<MruDynamicObject>();
+                    var oldSelected = _selectedObjects;
+                    _selectedObjects = new HashSet<MruDynamicObject>();
                     foreach (var selectedObject in oldSelected)
                     {
                         selectedObject.UnMark();
                         var c = new MruDynamicObject(selectedObject);
-                        selectedObjectsPositions[c] = c.Position;
+                        _selectedObjectsPositions[c] = c.Position;
                         SelectObject(c);
                     }
 
                     var clone = new MruDynamicObject(o);
-                    ObjectEditorState = ObjectEditorState.Edit;
+                    _objectEditorState = ObjectEditorState.Edit;
                     clone.Edit(e.Player);
                     break;
                 case ObjectEditorState.MultiSelect:
-                    if (selectedObjects.Contains(o))
+                    if (_selectedObjects.Contains(o))
                     {
-                        _player.SendClientMessage($"Usunąłęś obiekt {o} z zaznaczeń");
+                        _player.SendClientMessage($"Usunąłeś obiekt {o} z zaznaczeń");
                         UnSelectObject(o);
                     }
                     else
@@ -153,26 +160,23 @@ namespace Mrucznik.Objects
 
         public void OnEdited(MruDynamicObject o, PlayerEditEventArgs e)
         {
-            if (ObjectEditorState == ObjectEditorState.Edit)
+            if (_objectEditorState == ObjectEditorState.Edit)
             {
                 if (e.Response == EditObjectResponse.Update)
                 {
-                    e.Player.SendClientMessage($"Edytujesz obiekt: {this}");
-
-                    foreach (var selectedObject in selectedObjects)
+                    foreach (var selectedObject in _selectedObjects)
                     {
-                        selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
+                        selectedObject.Position = _selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                     }
-
                     return;
                 }
 
                 if (e.Response == EditObjectResponse.Final)
                 {
-                    e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
-                    foreach (var selectedObject in selectedObjects)
+                    e.Player.SendClientMessage($"Edytowałeś obiekt: {o}");
+                    foreach (var selectedObject in _selectedObjects)
                     {
-                        selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
+                        selectedObject.Position = _selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                         selectedObject.ApiSave();
                     }
 
@@ -181,19 +185,100 @@ namespace Mrucznik.Objects
                 }
                 else if (e.Response == EditObjectResponse.Cancel)
                 {
-                    e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {this}");
-                    foreach (var selectedObject in selectedObjects)
+                    e.Player.SendClientMessage($"Anulowałeś edycję obiektu: {o}");
+                    foreach (var selectedObject in _selectedObjects)
                     {
-                        selectedObject.Position = selectedObjectsPositions[selectedObject];
+                        selectedObject.Position = _selectedObjectsPositions[selectedObject];
                     }
-
-                    o.Position = o.Position;
                     o.UnMark();
                 }
 
-                ObjectEditorState = ObjectEditorState.None;
-                selectedObjectsPositions.Clear();
+                _objectEditorState = ObjectEditorState.None;
+                _selectedObjectsPositions.Clear();
                 o.UnMark();
+            }
+            else if (_objectEditorState == ObjectEditorState.CreateGate)
+            {
+                switch (e.Response)
+                {
+                    case EditObjectResponse.Update:
+                        break;
+                    case EditObjectResponse.Final:
+                        //2nd step - set opened position
+                        o.Position = e.Position;
+                        _player.SendClientMessage("Ustaw pozycję otwartej bramy.");
+
+                        break;
+                    case EditObjectResponse.Cancel:
+                        //destroy object
+                        e.Player.SendClientMessage("Anulowałeś tworzenie bramy.");
+                        o.ApiDelete();
+                        break;
+                }
+            }
+            else if (_objectEditorState == ObjectEditorState.CreateGate2NdState)
+            {
+                switch (e.Response)
+                {
+                    case EditObjectResponse.Update:
+                        break;
+                    case EditObjectResponse.Final:
+                        //3nd step - gate params & save gate to API
+                        MruV.Gates.CreateGateAsync(new CreateGateRequest()
+                        {
+                            Name = "Gate",
+                            Spot = new Spot()
+                            {
+                                Name = "Gate Spot",
+                                Message = "",
+                                Icon = 0,
+                                Marker = 0,
+                                Int = _player.Interior,
+                                Vw = _player.VirtualWorld,
+                                X = _player.Position.X,
+                                Y = _player.Position.Y,
+                                Z = _player.Position.Z,
+                            },
+                            GateObjects =
+                            {
+                                new MovableObject()
+                                {
+                                    Object = o,
+                                    States =
+                                    {
+                                        new State()
+                                        {
+                                            Name = "Closed",
+                                            X = o.Position.X,
+                                            Y = o.Position.Y,
+                                            Z = o.Position.Z,
+                                            Rx = o.Rotation.X,
+                                            Ry = o.Rotation.Y,
+                                            Rz = o.Rotation.Z,
+                                            TransitionSpeed = 2.5f
+                                        },
+                                        new State()
+                                        {
+                                            Name = "Opened",
+                                            X = e.Position.X,
+                                            Y = e.Position.Y,
+                                            Z = e.Position.Z,
+                                            Rx = e.Rotation.X,
+                                            Ry = e.Rotation.Y,
+                                            Rz = e.Rotation.Z,
+                                            TransitionSpeed = 2.5f
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        o.Position = o.Position;
+                        break;
+                    case EditObjectResponse.Cancel:
+                        e.Player.SendClientMessage("Anulowałeś tworzenie bramy.");
+                        o.ApiDelete();
+                        break;
+                }
             }
         }
 

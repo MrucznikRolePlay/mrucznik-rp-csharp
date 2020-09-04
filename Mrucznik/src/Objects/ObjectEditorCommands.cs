@@ -164,13 +164,19 @@ namespace Mrucznik.Commands
                 }
             }
 
-            [Command("texture", "t")]
-            private static void EditTexture(BasePlayer sender, int objectId, int textureIndex = 0)
+            [Command("stats", "s")]
+            private static void ObjectStats(Player sender, int modelId = -1)
             {
-                if (textureIndex < 0 || textureIndex > 15)
+                
+            }
+
+            [CommandGroup("texture", "t")]
+            class ObjectTexturesCommands
+            {
+                [Command("edit", "e")]
+                private static void EditTexture(BasePlayer sender, int objectId = -1)
                 {
-                    sender.SendClientMessage("Index textury powinien zawierać się w przedziale od 0 do 15.");
-                    return;
+                    
                 }
             }
 
@@ -187,6 +193,17 @@ namespace Mrucznik.Commands
                 private static void EditGroup(Player sender)
                 {
                     sender.SendClientMessage("Edytujesz grupę obiektów.");
+                }
+            }
+
+            [CommandGroup("gate", "gates")]
+            class ObjectGateCommands
+            {
+                [Command("create")]
+                private static void CreateGate(Player sender, int modelId)
+                {
+                    sender.SendClientMessage("Tworzysz bramę.");
+                    sender.ObjectEditor.CreateGateMode(new MruDynamicObject(modelId, sender.Position));
                 }
             }
 
