@@ -1,6 +1,7 @@
 using System;
 using Mruv.Objects;
 using SampSharp.GameMode;
+using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
 using SampSharp.Streamer.Events;
@@ -66,6 +67,14 @@ namespace Mrucznik
         {
             base.OnEdited(e);
 
+            if (e.Response == EditObjectResponse.Cancel)
+            {
+                DynamicTextLabel.Position = Position;
+            }
+            else
+            {
+                DynamicTextLabel.Position = e.Position;
+            }
             ((Player) e.Player).ObjectEditor.OnEdited(this, e);
         }
 

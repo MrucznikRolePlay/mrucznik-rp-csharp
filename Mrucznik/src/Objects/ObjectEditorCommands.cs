@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.SAMP.Commands.Parameters;
@@ -108,6 +110,10 @@ namespace Mrucznik.Commands
                 if (objectIds?.Count > 0)
                 {
                     sender.SendClientMessage($"Wybrałeś obiekty: {String.Join(", ", objectIds)}");
+                    foreach (var objectId in objectIds)
+                    {
+                        sender.ObjectEditor.SelectObject((MruDynamicObject)MruDynamicObject.Find(objectId));
+                    }
                     return;
                 }
                 sender.SendClientMessage(
@@ -148,10 +154,13 @@ namespace Mrucznik.Commands
             {
                 if (modelId != -1)
                 {
+                    // TODO: create + 1 based on camera view angle
+                    sender.SendClientMessage($"Stworzyłeś obiekt o modelu {modelId}.");
+                    sender.ObjectEditor.CreateObjectMode(new MruDynamicObject(modelId, sender.Position));
                 }
-                else // Select model from dialog
+                else
                 {
-                    sender.ObjectEditor.GetModelListDialog(0, "Stwórz", (o, args) => { });
+                    ModelsDialogCreate(sender);
                 }
             }
 
@@ -181,27 +190,39 @@ namespace Mrucznik.Commands
                 }
             }
 
-            private static void ModelsDialogCreate(Player player, int page)
+            private static void ModelsDialogCreate(Player player)
             {
                 var action = new EventHandler<DialogResponseEventArgs>((o, args) =>
                 {
                     if (args.DialogButton == DialogButton.Left)
                     {
-                        args.Player.SendClientMessage($"Stworzyłeś obiekt o modelu {args.InputText}.");
+                        player.SendClientMessage($"Stworzyłeś obiekt o modelu {args.InputText}.");
+                        player.ObjectEditor.CreateObjectMode(new MruDynamicObject(Int32.Parse(args.InputText), player.Position));
                     }
                     else
                     {
-                        ModelsDialogCreate(player, page + 1);
+                        ModelsDialogCreate(player);
                     }
                 });
-                var (dialog, ok) = player.ObjectEditor.GetModelListDialog(page, "Stwórz", action);
-                if (!ok)
+                
+                var categoriesDialog = new ListDialog("Kategorie modeli", "Wyjdź", "Wybierz");
+                categoriesDialog.AddItems(Objects.Objects.ObjectModelsCategory.Keys);
+                categoriesDialog.Response += (sender, args) =>
                 {
-                    player.SendClientMessage("Brak modeli na następnej stronie.");
-                    (dialog, _) = player.ObjectEditor.GetModelListDialog(page - 1, "Stwórz", action);
-                }
+                    var tablistDialog = new TablistDialog($"Modele - Kategoria {args.InputText}",
+                        new[] {"Model", "Nazwa", "Rozmiar", "Tagi"},
+                        "Stwórz", "Wróć");
+                    foreach (var objectModel in Objects.Objects.ObjectModelsCategory[args.InputText])
+                    {
+                        var o = objectModel.Value;
+                        tablistDialog.Add(o.Model.ToString(), o.Name,
+                            o.Size.ToString(CultureInfo.CurrentCulture), String.Join(", ", o.Tags));
+                    }
 
-                dialog.Show(player);
+                    tablistDialog.Response += action;
+                    tablistDialog.Show(player);
+                };
+                categoriesDialog.Show(player);
             }
         }
     }

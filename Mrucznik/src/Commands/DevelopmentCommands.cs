@@ -54,7 +54,7 @@ namespace Mrucznik.Commands
         }
         
         [Command("gotopos")]
-        private static void GotoPos(BasePlayer sender, double x, double y, double z)
+        private static void GotoPos(BasePlayer sender, float x, float y, float z)
         {
             sender.SendClientMessage($"Teleportowałeś się do pozycji: {x}, {y}, {z}");
             sender.Position = new Vector3(x, y, z);
@@ -77,7 +77,6 @@ namespace Mrucznik.Commands
                 }
             }
             sender.Position = new Vector3(x, y, z);
-            
         }
         
         [Command("testdialogflow")]

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Mrucznik.Systems;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
@@ -13,10 +14,12 @@ using SampSharp.Streamer.World;
 namespace Mrucznik.Objects
 {
     public class ObjectEditor
-    {        
+    {
         private ObjectEditorState ObjectEditorState;
         private HashSet<MruDynamicObject> selectedObjects = new HashSet<MruDynamicObject>();
-        private Dictionary<MruDynamicObject, Vector3> selectedObjectsPositions = new Dictionary<MruDynamicObject, Vector3>();
+
+        private Dictionary<MruDynamicObject, Vector3> selectedObjectsPositions =
+            new Dictionary<MruDynamicObject, Vector3>();
 
         private readonly Player _player;
 
@@ -30,12 +33,13 @@ namespace Mrucznik.Objects
             ObjectEditorState = ObjectEditorState.Edit;
             GlobalObject.Select(_player);
         }
+
         public void CloneObjectMode()
         {
             ObjectEditorState = ObjectEditorState.Clone;
             GlobalObject.Select(_player);
         }
-        
+
         public void MultiSelectMode()
         {
             ObjectEditorState = ObjectEditorState.MultiSelect;
@@ -66,6 +70,7 @@ namespace Mrucznik.Objects
             {
                 o.UnMark();
             }
+
             selectedObjects.Clear();
         }
 
@@ -80,38 +85,41 @@ namespace Mrucznik.Objects
             selectedObjects.Remove(o);
             o.UnMark();
         }
-        
+
         #region Events
+
         public void OnSelected(MruDynamicObject o, PlayerSelectEventArgs e)
         {
-            if (selectedObjects.Contains(o))
+            if (ObjectEditorState != ObjectEditorState.MultiSelect && selectedObjects.Contains(o))
             {
                 selectedObjects.Remove(o);
             }
-            
+
             switch (ObjectEditorState)
             {
                 case ObjectEditorState.Edit:
-                    _player.SendClientMessage($"Wybrałeś obiekt: {this}");
+                    _player.SendClientMessage($"Wybrałeś obiekt: {o}");
                     foreach (var selectedObject in selectedObjects)
                     {
                         selectedObjectsPositions[selectedObject] = selectedObject.Position;
                     }
+                    
                     o.Edit(_player);
                     o.Mark();
                     break;
                 case ObjectEditorState.Delete:
-                    _player.SendClientMessage($"Usunąłeś obiekt {this}");
+                    _player.SendClientMessage($"Usunąłeś obiekt {o}");
                     foreach (var selectedObject in selectedObjects)
                     {
                         selectedObject.ApiDelete();
                     }
+
                     selectedObjects.Clear();
                     o.ApiDelete();
                     ObjectEditorState = ObjectEditorState.Delete;
                     break;
                 case ObjectEditorState.Clone:
-                    _player.SendClientMessage($"Sklonowałeś obiekt: {this}");
+                    _player.SendClientMessage($"Sklonowałeś obiekt: {o}");
                     var oldSelected = selectedObjects;
                     selectedObjects = new HashSet<MruDynamicObject>();
                     foreach (var selectedObject in oldSelected)
@@ -121,6 +129,7 @@ namespace Mrucznik.Objects
                         selectedObjectsPositions[c] = c.Position;
                         SelectObject(c);
                     }
+
                     var clone = new MruDynamicObject(o);
                     ObjectEditorState = ObjectEditorState.Edit;
                     clone.Edit(e.Player);
@@ -128,14 +137,15 @@ namespace Mrucznik.Objects
                 case ObjectEditorState.MultiSelect:
                     if (selectedObjects.Contains(o))
                     {
-                        _player.SendClientMessage($"Usunąłęś obiekt {this} z zaznaczeń");
+                        _player.SendClientMessage($"Usunąłęś obiekt {o} z zaznaczeń");
                         UnSelectObject(o);
                     }
                     else
                     {
-                        _player.SendClientMessage($"Dodałeś obiekt {this} do zaznaczeń");
+                        _player.SendClientMessage($"Dodałeś obiekt {o} do zaznaczeń");
                         SelectObject(o);
                     }
+
                     MultiSelectMode();
                     break;
             }
@@ -153,9 +163,10 @@ namespace Mrucznik.Objects
                     {
                         selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                     }
+
                     return;
                 }
-                
+
                 if (e.Response == EditObjectResponse.Final)
                 {
                     e.Player.SendClientMessage($"Edytowałeś obiekt: {this}");
@@ -164,6 +175,7 @@ namespace Mrucznik.Objects
                         selectedObject.Position = selectedObjectsPositions[selectedObject] + (e.Position - o.Position);
                         selectedObject.ApiSave();
                     }
+
                     o.Position = e.Position;
                     o.ApiSave();
                 }
@@ -174,22 +186,27 @@ namespace Mrucznik.Objects
                     {
                         selectedObject.Position = selectedObjectsPositions[selectedObject];
                     }
+
                     o.Position = o.Position;
                     o.UnMark();
                 }
+
                 ObjectEditorState = ObjectEditorState.None;
                 selectedObjectsPositions.Clear();
                 o.UnMark();
             }
         }
+
         #endregion
 
         #region Dialogs
-        public (Dialog, bool) GetObjectListDialog(int page, string leftButtonText, EventHandler<DialogResponseEventArgs> action)
+
+        public (Dialog, bool) GetObjectListDialog(int page, string leftButtonText,
+            EventHandler<DialogResponseEventArgs> action)
         {
             if (page < 0)
                 return (null, false);
-            
+
             var objects = DynamicObject.All.Skip(50 * page).Take(50);
             var tablistDialog = new TablistDialog($"Obiekty - strona {page.ToString()}",
                 new[] {"ID", "Model", "Nazwa", "X", "Y", "Z", "VW", "INT"},
@@ -198,32 +215,16 @@ namespace Mrucznik.Objects
             foreach (var o in objects)
             {
                 ok = true;
-                tablistDialog.Add(o.Id.ToString(), o.ModelId.ToString(), o.ToString(), 
-                    o.Position.X.ToString(CultureInfo.CurrentCulture), 
-                    o.Position.Y.ToString(CultureInfo.CurrentCulture), 
+                tablistDialog.Add(o.Id.ToString(), o.ModelId.ToString(), o.ToString(),
+                    o.Position.X.ToString(CultureInfo.CurrentCulture),
+                    o.Position.Y.ToString(CultureInfo.CurrentCulture),
                     o.Position.Z.ToString(CultureInfo.CurrentCulture),
                     o.World.ToString(), o.Interior.ToString());
             }
 
             return (tablistDialog, ok);
         }
-        
-        public (Dialog, bool) GetModelListDialog(int page, string leftButtonText, EventHandler<DialogResponseEventArgs> action)
-        {
-            var tablistDialog = new TablistDialog($"Modele - strona {page.ToString()}",
-                new[] {"Model", "Nazwa", "Kategoria", "Tagi"},
-                leftButtonText, "Następny");
-            bool ok = false;
-            foreach (var objectModel in Objects.ObjectModels.Skip(50 * page).Take(50))
-            {
-                var o = objectModel.Value;
-                ok = true;
-                tablistDialog.Add(o.Model.ToString(), o.Name, 
-                    o.Category, String.Join( ", ", o.Tags));
-            }
-            tablistDialog.Response += action;
-            return (tablistDialog, ok);
-        }
+
         #endregion
     }
 }

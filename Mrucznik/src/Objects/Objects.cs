@@ -14,8 +14,10 @@ namespace Mrucznik.Objects
     {
         public List<RemovedBuilding> RemovedBuildings { private set; get; }
         public static readonly Dictionary<int, MruDynamicObject> ObjectsIDs = new Dictionary<int, MruDynamicObject>();
-        public static ConcurrentDictionary<int, ObjectModel> ObjectModels = new ConcurrentDictionary<int, ObjectModel>();
-    
+        public static Dictionary<int, ObjectModel> ObjectModels = new Dictionary<int, ObjectModel>();
+        public static Dictionary<string, Dictionary<int, ObjectModel>> ObjectModelsCategory = new Dictionary<string, Dictionary<int, ObjectModel>>();
+        public static Dictionary<string, Dictionary<int, ObjectModel>> ObjectModelsTag = new Dictionary<string, Dictionary<int, ObjectModel>>();
+        
         public Objects()
         {
             try
@@ -57,6 +59,31 @@ namespace Mrucznik.Objects
                 foreach (var objectModel in call.ResponseStream.Current.Models)
                 {
                     ObjectModels.TryAdd(objectModel.Key, objectModel.Value);
+                    if (ObjectModelsCategory.ContainsKey(objectModel.Value.Category))
+                    {
+                        ObjectModelsCategory[objectModel.Value.Category].TryAdd(objectModel.Key, objectModel.Value);
+                    }
+                    else
+                    {
+                        ObjectModelsCategory.Add(objectModel.Value.Category, new Dictionary<int, ObjectModel>()
+                        {
+                            {objectModel.Key, objectModel.Value}
+                        });
+                    }
+                    foreach (var objectModelTag in objectModel.Value.Tags)
+                    {
+                        if (ObjectModelsTag.ContainsKey(objectModelTag))
+                        {
+                            ObjectModelsTag[objectModelTag].TryAdd(objectModel.Key, objectModel.Value);
+                        }
+                        else
+                        {
+                            ObjectModelsTag.Add(objectModelTag, new Dictionary<int, ObjectModel>()
+                            {
+                                {objectModel.Key, objectModel.Value}
+                            });
+                        }
+                    }
                 }
             }
             Console.WriteLine("\nModels loaded.");
