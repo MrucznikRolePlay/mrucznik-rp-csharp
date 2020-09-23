@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Mrucznik.Helpers;
 using Mrucznik.Objects;
 using SampSharp.GameMode.SAMP;
@@ -14,6 +15,7 @@ namespace Mrucznik
 {
     public class Player : BasePlayer
     {
+        public uint AccountID { get; private set; }
         public Character PlayerCharacter;
         public bool LoggedIn;
         public readonly ObjectEditor ObjectEditor;
@@ -51,6 +53,67 @@ namespace Mrucznik
             SetupClientOnConnect();
         }
 
+        public void RconBan()
+        {
+            base.Ban();
+        }
+
+        public override void Ban()
+        {
+            Ban("SYSTEM BAN");
+            Kick();
+        }
+
+        public void Ban(string reason)
+        {
+            MruV.Punishments.BanAsync(new BanRequest
+            {
+                Admin = 0,
+                Character = PlayerCharacter.Id,
+                Ip = IP,
+                Player = AccountID,
+                Reason = reason,
+                Time = (uint) DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            });
+            Kick();
+        }
+
+        public void Ban(Player admin, string reason)
+        {
+            MruV.Punishments.BanAsync(new BanRequest
+            {
+                Admin = admin.AccountID,
+                Character = PlayerCharacter.Id,
+                Ip = IP,
+                Player = AccountID,
+                Reason = reason,
+                Time = (uint) DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            });
+            Kick();
+        }
+
+        public void Block(string reason)
+        {
+            MruV.Punishments.BlockAsync(new BlockRequest
+            {
+                Admin = 0,
+                Character = PlayerCharacter.Id,
+                Reason = reason
+            });
+            Kick();
+        }
+
+        public void Block(Player admin, string reason)
+        {
+            MruV.Punishments.BlockAsync(new BlockRequest
+            {
+                Admin = admin.AccountID,
+                Character = PlayerCharacter.Id,
+                Reason = reason
+            });
+            Kick();
+        }
+
         public void InstaKick()
         {
             base.Kick();
@@ -63,6 +126,12 @@ namespace Mrucznik
             {
                 if (IsConnected) base.Kick();
             };
+        }
+
+        public void Kick(string reason)
+        {
+            SendClientMessage($"Zostałeś skickowany za: {reason}");
+            Kick();
         }
 
         public override void SendPlayerMessageToAll(string message)
