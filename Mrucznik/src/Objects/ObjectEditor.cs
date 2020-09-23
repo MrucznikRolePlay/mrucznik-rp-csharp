@@ -191,6 +191,7 @@ namespace Mrucznik.Objects
                         selectedObject.Position = _selectedObjectsPositions[selectedObject];
                     }
                     o.UnMark();
+                    o.Position = o.Position;
                 }
 
                 _objectEditorState = ObjectEditorState.None;
